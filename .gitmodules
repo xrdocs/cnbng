@@ -1,0 +1,6 @@
+[submodule "_data"]
+	path = _data
+	url = git@github.com:xrdocs/_data.git
+[submodule "images/avatars"]
+	path = images/avatars
+	url = git@github.com:xrdocs/avatars.git
