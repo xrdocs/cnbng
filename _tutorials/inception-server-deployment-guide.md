@@ -96,10 +96,10 @@ network:
 ```
 
 **Note1:** Sometimes interface is not shown as ens160, in that case it is a good idea to search for the interface using ifconfig -a command. Generally lower ens number is the first NIC attached to the VM, and higher number is the last. 
-{: .notice-info}
+{: .notice--info}
 
 **Note2:** We can also use cloud-init for os changes. 
-{: .notice-info}
+{: .notice--info}
 
 ### Inception Ubuntu VM OS customisation
 - SSH login to Inception VM using login password setup earlier
