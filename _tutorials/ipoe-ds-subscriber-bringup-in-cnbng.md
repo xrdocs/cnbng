@@ -399,19 +399,19 @@ This is where we associate access interfaces with cnBNG DHCP profile. cnBNG spec
 dhcp ipv4
  profile cnbng_v4 cnbng
  !
- interface GigabitEthernet0/0/0/0.101 cnbng profile cnbng_v4
+ interface Bundle-Ether1.101 cnbng profile cnbng_v4
 
 dhcp ipv6
  profile cnbng_v6 cnbng
  !
- interface GigabitEthernet0/0/0/0.101 cnbng profile cnbng_v6
+ interface Bundle-Ether1.101 cnbng profile cnbng_v6
 ```
 
 ### Access Interface Configuration
 We define and associate access interface to cnBNG. This way control packets (based on configurations) get routed to the cnBNG CP. The contruct follows ASR9k Integarted BNG model, if you are familiar with.
 
 ```
-interface GigabitEthernet0/0/0/0.101
+interface Bundle-Ether1.101
  ipv4 point-to-point
  ipv4 unnumbered Loopback1
  ipv6 address 2001::1/64
@@ -512,7 +512,7 @@ subscriber-details
             "16777220@sm",
             "acct-sess-id:pod3_DC_16777220@sm",
             "upf:pod100-cnbng-up1",
-            "port-id:pod100-cnbng-up1/GigabitEthernet0/0/0/0.100",
+            "port-id:pod100-cnbng-up1/Bundle-Ether1.100",
             "feat-template:ipoe-1",
             "type:sessmgr",
             "mac:0050.5688.61ae",
@@ -542,7 +542,7 @@ Codes: CN - Connecting, CD - Connected, AC - Activated,
 
 CPID(hex)  Interface               State  Mac Address     Subscriber IP Addr / Prefix (Vrf) Ifhandle
 ---------------------------------------------------------------------------------------------------
-1000014    Gi0/0/0/0.100.ip1073741856 AC     0050.5688.61ae  110.1.0.21 (default) 0x1000030 
+1000014    BE1.100.ip1073741856 AC     0050.5688.61ae  110.1.0.21 (default) 0x1000030 
                                                           f:2::1:6 (IANA)
                                                           2001:db1:0:7::/64 (IAPD)
 Session-count: 1
@@ -569,7 +569,7 @@ RP/0/RP0/CPU0:pod100-cnbng-up1#show route subscriber
 Mon Dec  6 05:01:51.410 UTC
 
 A    110.1.0.0/16 [1/0] via 0.0.0.0, 3d12h
-A    110.1.0.21/32 is directly connected, 3d12h, GigabitEthernet0/0/0/0.100.ip107374185
+A    110.1.0.21/32 is directly connected, 3d12h, Bundle-Ether1.100.ip107374185
 
 RP/0/RP0/CPU0:pod100-cnbng-up1#show route ipv6 subscriber 
 Mon Dec  6 05:01:31.667 UTC
@@ -577,11 +577,11 @@ Mon Dec  6 05:01:31.667 UTC
 A    f:2::1:0/112 
       [1/0] via ::, 3d12h
 A    f:2::1:6/128 is directly connected,
-      3d12h, GigabitEthernet0/0/0/0.100.ip1073741856
+      3d12h, Bundle-Ether1.100.ip1073741856
 A    2001:db1::/48 
       [1/0] via ::, 3d12h
 A    2001:db1:0:7::/64 
-      [2/0] 3d12h, GigabitEthernet0/0/0/0.100.ip1073741856
+      [2/0] 3d12h, Bundle-Ether1.100.ip1073741856
 ```
 
 - Notice that the QoS poilicy and ACLs are applied to subscriber interface
