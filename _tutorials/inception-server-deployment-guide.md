@@ -175,7 +175,7 @@ drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 compose-offline
 drwxr-xr-x 5 cloud-user cloud-user 4096 Apr 12 21:07 ..
 drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 .
 Run the deploy command as shown below. External-ip is the IP address of the management interface, we will be accessing the CLI and Netconf interface to SMI Cluster Deployer using this IP. It will be used to host your ISO and your offline file tars to be downloaded to the remote hosts
-cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ ./deploy --external-ip 172.22.18.55 --first-boot-password "Cisco@123"
+cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ ./deploy --external-ip 172.22.18.55 --first-boot-password "<<your password>>"
 2020-04-13 19:49:16.261 INFO deploy: Directory Path /var/tmp/offline-cm/data/deployer-inception
 2020-04-13 19:49:16.261 INFO deploy: Directory is /var/tmp/offline-cm/data/deployer-inception/../
 2020-04-13 19:49:16.261 INFO deploy: Default info: external_ip: 172.22.18.55 and tar_name: cluster-deployer-2020-04-12
