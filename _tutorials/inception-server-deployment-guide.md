@@ -73,7 +73,9 @@ Download the SMI base ISO image. This is the image which will be used for Ubuntu
 - After the VM boots up: login to the VM (user: cloud-user, password: Cisco_123). You will be prompted to change the password immediately
 - Now setup Networking by editing "/etc/netplan/50-cloud-init.yaml" file. Here is a sample file config:
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 network:
     ethernets:
         eno1:
@@ -83,17 +85,19 @@ network:
         ens160:
             dhcp4: false
             addresses:
-               - <<inception VM IP>>/<<your subnet>>
+               - <mark><<inception VM IP>>/<<your subnet>></mark>
             gateway4: <<your gateway IP>>
             nameservers:
-                search: [<<your domain>>]
-                addresses: [<<your dns server>>]
+                search: [<mark><<your domain>></mark>]
+                addresses: [<mark><<your dns server>></mark>]
         ens3:
             dhcp4: true
         eth0:
             dhcp4: true
     version: 2
-```
+</code>
+</pre>
+</div>
 
 **Note1:** Sometimes interface is not shown as ens160, in that case it is a good idea to search for the interface using ifconfig -a command. Generally lower ens number is the first NIC attached to the VM, and higher number is the last. 
 {: .notice--info}
@@ -105,11 +109,15 @@ network:
 - SSH login to Inception VM using login password setup earlier
 - Now change the hostname of the VM to: <your-inception-vm-name>, using:
   
-```
-sudo hostnamectl set-hostname <<your-inception-vm-name>>
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+sudo hostnamectl set-hostname <mark><<your-inception-vm-name>></mark>
 E.g.
-sudo hostnamectl set-hostname inception
-```
+sudo hostnamectl set-hostname <mark>inception</mark>
+</code>
+</pre>
+</div>
 - Logout of the VM and login again to see hostname changes are reflected
 - Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present.
 - Replace default hostname for VM with the one you set into /etc/hosts file
@@ -117,14 +125,24 @@ sudo hostnamectl set-hostname inception
 ## Step 2: Installation of SMI Cluster Deployer using Tarball
 - Make a temporary folder and copy the offline SMI cluster deployer products tarball
   
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 cloud-user@inception:/var/tmp/offline-cm$ ls -altr
 total 2984112
 drwxrwxrwt 6 root          root                4096 Apr 12 20:57 ..
--rw-rw-r-- 1 kashyap-cloud kashyap-cloud 3055718400 Apr 12 21:08 cluster-deployer-2020-04-12.tar
+-rw-rw-r-- 1 kashyap-cloud kashyap-cloud 3055718400 Apr 12 21:08 <mark>cluster-deployer-2020-04-12.tar</mark>
 drwxrwxr-x 2 kashyap-cloud kashyap-cloud       4096 Apr 12 21:50 .
-Untar the tarball using tar xvf
-cloud-user@inception:/var/tmp/offline-cm$ tar xvf cluster-deployer-2020-04-12.tar
+</code>
+</pre>
+</div>
+  
+- Untar the tarball using tar xvf
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+cloud-user@inception:/var/tmp/offline-cm$ <mark>tar xvf cluster-deployer-2020-04-12.tar</mark>
 data/
 data/docker/
 data/docker/registry/
@@ -147,11 +165,15 @@ data/docker/registry/v2/blobs/sha256/4f/
 data/docker/registry/v2/blobs/sha256/4f/4faf3e475ac4f0df9de360e9845e1c3de73e04cb0
 . . .
 . . .
-```
+</code>
+</pre>
+</div>
 
 - After tar xvf finishes: cluster Deployer files will be copied to "data" folder in the same temporary folder where tarball was copied
   
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 cloud-user@inception:/var/tmp/offline-cm/data$ ls -altr
 total 20
 drwxr-xr-x 3 cloud-user cloud-user 4096 Apr 12 21:04 docker
@@ -159,12 +181,16 @@ drwxrwxr-x 2 cloud-user cloud-user 4096 Apr 12 21:07 charts
 drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 deployer-inception
 drwxr-xr-x 5 cloud-user cloud-user 4096 Apr 12 21:07 .
 drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 22:00 ..
-```
+</code>
+</pre>
+</div>
 
 - Deploy utility which deploys the SMI Cluster Deployer can be located inside data/deployer-inception folder. We will be using this utility to deploy SMI Cluster Deployer
 
-```
-cloud-user@inception:/var/tmp/offline-cm/data$ cd deployer-inception/
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+cloud-user@inception:/var/tmp/offline-cm/data$ <mark>cd deployer-inception/</mark>
 cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ ls -altr
 total 36
 -rwxrwxr-x 1 cloud-user cloud-user  102 Apr 12 21:07 stop
@@ -174,12 +200,16 @@ drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 compose-offline
 -rw-rw-r-- 1 cloud-user cloud-user   60 Apr 12 21:07 README.md
 drwxr-xr-x 5 cloud-user cloud-user 4096 Apr 12 21:07 ..
 drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 .
-```
+</code>
+</pre>
+</div>
   
 - Run the deploy command as shown below. External-ip is the IP address of the management interface, we will be accessing the CLI and Netconf interface to SMI Cluster Deployer using this IP. It will be used to host your ISO and your offline file tars to be downloaded to the remote hosts
 
-```
-cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ ./deploy --external-ip 172.22.18.55 --first-boot-password "<<your password>>"
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ <mark>./deploy --external-ip 172.22.18.55 --first-boot-password "<<your password>>"</mark>
 2020-04-13 19:49:16.261 INFO deploy: Directory Path /var/tmp/offline-cm/data/deployer-inception
 2020-04-13 19:49:16.261 INFO deploy: Directory is /var/tmp/offline-cm/data/deployer-inception/../
 2020-04-13 19:49:16.261 INFO deploy: Default info: external_ip: 172.22.18.55 and tar_name: cluster-deployer-2020-04-12
@@ -192,12 +222,14 @@ cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ ./deploy --ext
 . . .
 Connection Information
 ----------------------
-SSH (cli): ssh admin@localhost -p 2022
+<mark>SSH (cli): ssh admin@localhost -p 2022
 SSH (browser): https://cli.172.22.18.55.nip.io
 Files: https://files-offline.172.22.18.55.nip.io
 UI: https://deployer-ui.172.22.18.55.nip.io
-API: https://restconf.172.22.18.55.nip.io
-```
+API: https://restconf.172.22.18.55.nip.io</mark>
+</code>
+</pre>
+</div>
   
 ## Verifications
 - We can login to the SMI Cluster Deployer CLI, using "ssh admin@localhost -p 2022" on Inception VM
