@@ -7,7 +7,9 @@ author: Gurpreet Dhaliwal
 ## Introduction
 Inception Server is used to deploy the SMI cluster. It packages Ansible Swcripts which makes the deployment of SMI with all addons as a one click operation. The server also has a confD, which offers a user and machine friendly interfaces for SMI deployment. The main interfaces offered are Netconf, Restconf and CLI. In this tutorial we will deploy Inception Server in VMWare ESXi environment. The VMware vSphere Hypervisor (ESXi) 6.5 and 6.7 has been fully tested and meets performance benchmarks.
 
-<img src="images/inception1.png" alt="inception" width="200"/>
+![inception1.png]({{site.baseurl}}/images/inception1.png)
+
+!! <img src={{site.baseurl}}/images/inception1.png alt="inception" width="200"/>
 
 We need following softwares for deployment of Inception Server:
 
