@@ -84,11 +84,11 @@ instance instance-id 1
  exit
  endpoint radius
 !! Change this IP to your setup based IP
-<mark>   vip-ip 10.0.100.1</mark>
+   <mark>vip-ip 10.0.100.1</mark>
   interface coa-nas
    sla response 140000
 !! Change this IP to your setup based IP
-<mark>   vip-ip 10.0.100.1 vip-port 2000</mark>
+   <mark>vip-ip 10.0.100.1 vip-port 2000</mark>
   exit
  exit
  endpoint udp-proxy
@@ -140,16 +140,18 @@ Helm update is SUCCESS.  Trigger for update is STARTUP.
 </pre>
 </div>
 
-- Wait for system to deploy all PODs. Verify that all PODs are deployed for cnBNG. Four PODs will be in Init state at this moment, which is ok.
+- Wait for system to deploy all PODs. Verify that all PODs are deployed for cnBNG. Four PODs will be in <span style="background-color: #FDD7E4">Init</span> state at this moment, which is ok.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 cisco@pod100-cnbng-cp:~$ kubectl get pods -n bng-bng
 NAME                                                   READY   STATUS     RESTARTS   AGE
-bng-dhcp-n0-0                                          0/2     Init:0/1   0          2m45s
+bng-dhcp-n0-0                                          0/2     <span style="background-color: #FDD7E4">Init:0/1</span>   0          2m45s
 bng-n4-protocol-n0-0                                   2/2     Running    0          2m44s
-bng-nodemgr-n0-0                                       0/2     Init:0/1   0          2m45s
-bng-pppoe-n0-0                                         0/2     Init:0/1   0          2m45s
-bng-sm-n0-0                                            0/2     Init:0/1   0          2m45s
+bng-nodemgr-n0-0                                       0/2     <span style="background-color: #FDD7E4">Init:0/1</span>   0          2m45s
+bng-pppoe-n0-0                                         0/2     <span style="background-color: #FDD7E4">Init:0/1</span>   0          2m45s
+bng-sm-n0-0                                            0/2     <span style="background-color: #FDD7E4">Init:0/1</span>   0          2m45s
 cache-pod-0                                            1/1     Running    0          2m44s
 cache-pod-1                                            0/1     Running    0          16s
 cdl-ep-session-c1-d0-868f578d69-8n2rw                  1/1     Running    0          2m46s
@@ -173,7 +175,9 @@ radius-ep-n0-0                                         2/2     Running    1     
 smart-agent-bng-bng-ops-center-54bcbf5576-tc4p9        1/1     Running    1          46h
 udp-proxy-0                                            1/1     Running    0          2m45s
 zookeeper-0                                            1/1     Running    0          2m46s
-```
+</code>
+</pre>
+</div>
 
 ## cnBNG CP Configuration
 
@@ -191,7 +195,9 @@ Let's understand each one in step-by-step and apply in Ops Center in config mode
 ### IPAM
 This is where we define subscriber address pools for IPv4, IPv6 (NA) and IPv6 (PD). These are the pools from which CPE will get the IPs. IPAM assigns addresses dynamically by splitting address pools into smaller chunks. And then associating each chunk with a user-plane. The pools get freed up dynamically and re-allocated to different user-planes on need basis. 
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 ipam
  instance 1
   source local
@@ -202,7 +208,7 @@ ipam
      per-cache 65536
      per-dp    65536
     exit
-    address-range 110.0.0.1 110.10.255.255
+    <mark>address-range 110.0.0.1 110.10.255.255</mark>
    exit
    ipv6
     address-ranges
@@ -210,20 +216,22 @@ ipam
       per-cache 65536
       per-dp    65536
      exit
-     address-range f:2::1 f:2::10:ffff
+     <mark>address-range f:2::1 f:2::10:ffff</mark>
     exit
     prefix-ranges
      split-size
       per-cache 65536
       per-dp    65536
      exit
-     prefix-range 2001:db1:: length 48
+     <marik>prefix-range 2001:db1:: length 48</mark>
     exit
    exit
   exit
  exit
 exit
-```
+</code>
+</pre>
+</div>
 
 ### Profile DHCP
 At present cnBNG only supports DHCP server option. That means cnBNG CP acts as a DHCP server to assign IPs to CPE/subscribers. In profile DHCP we define the DHCP server and which IPAM pool to use by default for subscriber. We can use different pools for IPv4, IPv6 (IANA) and IPv6 (IAPD).
@@ -252,23 +260,30 @@ exit
 ### Profile AAA
 This profile defines the AAA parameters, like which Radius group to be used authorization and accounting. Also what username value to be used. Here we also define other attrbutes and formats. In this example we will be using MAC based authorization
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 profile aaa aaa_mac
  authorization
   type subscriber method-order [ local ]
-  username identifier client-mac-address
+<mark>!! In this example we are using client-mac-address for auth</mark>
+  username identifier <mark>client-mac-address</mark>
   password cisco
  exit
  accounting
   method-order [ local ]
  exit
 exit
-```
+</code>
+</pre>
+</div>
 
 ### Profile Radius
 Under this profile, Radius groups are created.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 profile server-group local
  radius-group local
 exit
@@ -279,34 +294,36 @@ profile radius
  detect-dead-server response-timeout 60
  max-retry 2
  timeout   5
-!! Use your radius IP and port for auth here. Here we use 10.0.100.4 as Radius IP with 1812 auth port and 1813 acct port
- server 10.0.100.4 1812
+!! Use your radius IP and port for auth here. Here we use <mark>10.0.100.4</mark> as Radius IP with 1812 auth port and 1813 acct port
+ server <mark>10.0.100.4</mark> 1812
   type   auth
   secret cisco
  exit
- server 10.0.100.4  1813
+ server <mark>10.0.100.4</mark>  1813
   type   acct
   secret cisco
  exit
  attribute
   nas-identifier CISCO-cnBNG
 !! This should be CP UDP Proxy IP
-  nas-ip         10.0.100.1
+  nas-ip         <mark>10.0.100.1</mark>
  exit
  server-group local
-  server auth 10.0.100.4 1812
+  server auth <mark>10.0.100.4</mark> 1812
   exit
-  server acct 10.0.100.4 1813
+  server acct <mark>10.0.100.4</mark> 1813
   exit
  exit
 exit
 !! We can also set COA client, use client IP as per the setup
 profile coa
- client 10.0.100.4
+ client <mark>10.0.100.4</mark>
   server-key cisco
  exit
 exit
-```
+</code>
+</pre>
+</div>
 
 ### Profile Feature-template
 This profile defines subscriber feature template. This is the template which will be applied to dynamic subscriber interface. We also enable service/ session accounting here.
@@ -354,13 +371,17 @@ exit
 ### User-plane
 This construct define the association configs. Peering IP as well as subscriber profile to be attached to user-plane or at port level.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 user-plane ASR9k-1
 !! This should be UP IP to which to peer
- peer-address ipv4 10.0.100.2
+ peer-address ipv4 <mark>10.0.100.2</mark>
  subscriber-profile subscriber-profile_ipoe-1
 exit
-```
+</code>
+</pre>
+</div>
 
 ## cnBNG UP Configuration
 
@@ -382,20 +403,28 @@ interface Loopback1
 
 This is where we define association between cnBNG CP and UP. The auto-loopback with secondary-address-upadte enabled will make sure we are able to assign IPs dynamically from IPAM. 
 
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 cnbng-nal location 0/RP0/CPU0
  hostidentifier ASR9k-1
- up-server ipv4 10.0.100.2 vrf default
- cp-server primary ipv4 10.0.100.1
+!! up-server ip should be the ip of UP interface which will be used as source for SCi communication
+ up-server ipv4 <mark>10.0.100.2</mark> vrf default
+!! cp-server ip is the IP of UDP Proxy configuration, in AIO this is the IP of the VM
+ cp-server primary ipv4 <mark>10.0.100.1</mark>
  auto-loopback vrf default
   interface Loopback1
 !! Any dummy IP
-   primary-address 1.1.1.1
+   primary-address <mark>1.1.1.1</mark>
   !
  !
 !! retry-count specifies how many times UP should retry the connection with CP before declaring CP as dead
  cp-association retry-count 10
  secondary-address-update enable
 !
+</code>
+</pre>
+</div>
 
 **Note**: NAL stands for Network Adaptation Layer for Cloud Native BNG in IOS-XR
 {: .notice--info}
