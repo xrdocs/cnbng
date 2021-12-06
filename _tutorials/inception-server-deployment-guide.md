@@ -25,6 +25,7 @@ The following are the minimum hardware requirements for deploying Inception VM u
 - Memory: 24 G
 - Storage: 200 GB
 - NIC interfaces: The number of NIC interfaces required is based on the K8s network and VMware host network reachability. Refer to cnBNG Concepts Part-1 document for more details on networking.
+
 The hardware requirements for Inception VM canbe reduced for non-production deployment:
 
 - CPU: 4 vCPU
@@ -40,7 +41,7 @@ The hardware requirements for Inception VM canbe reduced for non-production depl
 1. Provide name of the cluster and click ok (all other options remain default)
 1. Now add a host to the cluster. By selecting add host from right click menu on newly created cluster. Follow on screen instructions to add the host.
 
-### Step 1: Inception VM deployment using Base ISO Image provided by SMI
+## Step 1: Inception VM deployment using Base ISO Image provided by SMI
 Download the SMI base ISO image. This is the image which will be used for Ubuntu VM deployment. This is customized Ubuntu for SMI. Now, follow below steps to deploy Ubuntu VM using the downloaded ISO file:
 
 - Download the SMI Base ISO file and copy the file to the VM Datastore
@@ -51,19 +52,15 @@ Download the SMI base ISO image. This is the image which will be used for Ubuntu
 - Select compatibility (ESXi 6.7 or later)
 - Select guest OS: Guest Family- Linux, Guest OS Version- Ubuntu Linux (64-bit)
 - Customize Hardware:
-- vCPU: 8, Memory: 16GB, New Hard disk: 100Gb (this will depend on the dimensioning selected)
-- Under Network: select management network ("VM Network" in most cases
-- Click New CD/DVD Drive and do the following:
-- Select Datastore ISO file option to boot from the SMI Base .iso file. Browse to the location of the .iso file on the datastore set in Step 1.
-- In the Device Status field, select Connect at power on checkbox.
+  - vCPU: 8, Memory: 16GB, New Hard disk: 100Gb (this will depend on the dimensioning selected)
+  - Under Network: select management network ("VM Network" in most cases
+  - Click New CD/DVD Drive and do the following:
+    - Select Datastore ISO file option to boot from the SMI Base .iso file. Browse to the location of the .iso file on the datastore set in Step 1.
+    - In the Device Status field, select Connect at power on checkbox.
 - After the VM boots up: login to the VM (user: cloud-user, password: Cisco_123). You will be prompted to change the password immediately
 - Now setup Networking by editing "/etc/netplan/50-cloud-init.yaml" file. Here is a sample file config:
 
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-<code>
-
+```
 network:
     ethernets:
         eno1:
@@ -83,25 +80,29 @@ network:
         eth0:
             dhcp4: true
     version: 2
+```
 
-</code>
-</pre>
-</div>
-Note1: Sometimes interface is not shown as ens160, in that case it is a good idea to search for the interface using ifconfig -a command. Generally lower ens number is the first NIC attached to the VM, and higher number is the last. 
+**Note1:** Sometimes interface is not shown as ens160, in that case it is a good idea to search for the interface using ifconfig -a command. Generally lower ens number is the first NIC attached to the VM, and higher number is the last. 
 
-Note2: We can also use cloud-init for os changes
+**Note2:** We can also use cloud-init for os changes
 
-Inception Ubuntu VM OS customisation
-SSH login to Inception VM using login password setup earlier
-Now change the hostname of the VM to: <your-inception-vm-name>, using:
+### Inception Ubuntu VM OS customisation
+- SSH login to Inception VM using login password setup earlier
+- Now change the hostname of the VM to: <your-inception-vm-name>, using:
+  
+```
 sudo hostnamectl set-hostname <your-inception-vm-name>
 E.g.
 sudo hostnamectl set-hostname inception
-Logout of the VM and login again to see hostname changes are reflected
-Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present.
-Replace default hostname for VM with the one you set into /etc/hosts file
-Step 2: Installation of SMI Cluster Deployer using Tarball
-Make a temporary folder and copy the offline SMI cluster deployer products tarball
+```
+- Logout of the VM and login again to see hostname changes are reflected
+- Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present.
+- Replace default hostname for VM with the one you set into /etc/hosts file
+
+## Step 2: Installation of SMI Cluster Deployer using Tarball
+- Make a temporary folder and copy the offline SMI cluster deployer products tarball
+  
+```
 cloud-user@inception:/var/tmp/offline-cm$ ls -altr
 total 2984112
 drwxrwxrwt 6 root          root                4096 Apr 12 20:57 ..
@@ -131,9 +132,11 @@ data/docker/registry/v2/blobs/sha256/4f/
 data/docker/registry/v2/blobs/sha256/4f/4faf3e475ac4f0df9de360e9845e1c3de73e04cb0
 . . .
 . . .
+```
 
-
-After tar xvf finishes: cluster Deployer files will be copied to "data" folder in the same temporary folder where tarball was copied
+- After tar xvf finishes: cluster Deployer files will be copied to "data" folder in the same temporary folder where tarball was copied
+  
+```
 cloud-user@inception:/var/tmp/offline-cm/data$ ls -altr
 total 20
 drwxr-xr-x 3 cloud-user cloud-user 4096 Apr 12 21:04 docker
@@ -141,9 +144,11 @@ drwxrwxr-x 2 cloud-user cloud-user 4096 Apr 12 21:07 charts
 drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 deployer-inception
 drwxr-xr-x 5 cloud-user cloud-user 4096 Apr 12 21:07 .
 drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 22:00 ..
+```
 
+- Deploy utility which deploys the SMI Cluster Deployer can be located inside data/deployer-inception folder. We will be using this utility to deploy SMI Cluster Deployer
 
- Deploy utility which deploys the SMI Cluster Deployer can be located inside data/deployer-inception folder. We will be using this utility to deploy SMI Cluster Deployer
+```
 cloud-user@inception:/var/tmp/offline-cm/data$ cd deployer-inception/
 cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ ls -altr
 total 36
@@ -173,9 +178,12 @@ SSH (browser): https://cli.172.22.18.55.nip.io
 Files: https://files-offline.172.22.18.55.nip.io
 UI: https://deployer-ui.172.22.18.55.nip.io
 API: https://restconf.172.22.18.55.nip.io
-
-Verifications:
-We can login to the SMI Cluster Deployer CLI, using "ssh admin@localhost -p 2022" on Inception VM​​​​​​​
+```
+  
+## Verifications
+- We can login to the SMI Cluster Deployer CLI, using "ssh admin@localhost -p 2022" on Inception VM
+  
+```
 cloud-user@inception:~$ ssh admin@localhost -p 2022
 admin@localhost's password: 
 
@@ -186,7 +194,11 @@ admin@localhost's password:
 admin connected from 172.18.0.1 using ssh on 79bd273aeec7
 [inception] SMI Cluster Deployer# 
 [inception] SMI Cluster Deployer# 
-We can also connect to netconf interface of the SMI Deployer through ssh at default port 830
+```
+- We can also connect to netconf interface of the SMI Deployer through ssh at default port 830
+
+```
+
 cloud-user@inception:~$ ssh admin@localhost -p 830 -s netconf
 admin@localhost's password: 
 <?xml version="1.0" encoding="UTF-8"?>
@@ -235,3 +247,4 @@ admin@localhost's password:
 <capability>urn:ietf:params:xml:ns:yang:ietf-yang-types?module=ietf-yang-types&amp;revision=2013-07-15</capability>
 </capabilities>
 <session-id>278399</session-id></hello>]]>]]>
+```
