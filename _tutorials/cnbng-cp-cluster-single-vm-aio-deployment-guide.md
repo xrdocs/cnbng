@@ -19,6 +19,11 @@ The deployment is done in 3 steps, where the 3rd step uses automation provided b
 	- SMI Cluster Deployment, which includes CN Infra (automated)
 	- CEE and cnBNG CP Application deployment (automated)
 
+## Networking
+
+![aio-networking1.png]({{site.baseurl}}/images/aio-networking1.png)
+
+
 ## Prerequisite (optional, if DC already exists)
 1. Make sure vCenter is installed (ver 6.7 is tested)
 1. In the vCenter, right click and select New Data Center
@@ -250,5 +255,167 @@ Thursday 18 November 2021  14:38:49 +0000 (0:00:00.064)       0:08:42.748 *****
 2021-11-18 14:38:49.717 INFO cluster_sync.podX: _sync finished.  Opening lock 
 ```
 
+## Verifications
 
+- Check kubernetes cluster is deployed correctly and no PODs are crashing
+
+```
+cisco@pod1-cnbng-cp:~$ kubectl get pods -A
+NAMESPACE           NAME                                                 READY   STATUS    RESTARTS   AGE
+bng-bng             documentation-95c8f45d9-8g4qd                        1/1     Running   0          5m
+bng-bng             ops-center-bng-bng-ops-center-77fb6479fc-dtvt2       5/5     Running   0          5m
+bng-bng             smart-agent-bng-bng-ops-center-8d9fffbfb-5cdqm       1/1     Running   1          5m
+cee-global          alert-logger-7c6d5b6596-jrrx6                        1/1     Running   0          5m
+cee-global          alert-router-549c8fb66c-4shz6                        1/1     Running   0          5m
+cee-global          alertmanager-0                                       1/1     Running   0          5m
+cee-global          blackbox-exporter-n9mzx                              1/1     Running   0          5m
+cee-global          bulk-stats-0                                         3/3     Running   0          5m
+cee-global          cee-global-product-documentation-864c8fb66b-rm44g    2/2     Running   0          5m
+cee-global          core-retriever-bntcb                                 2/2     Running   0          5m
+cee-global          documentation-684cbb8cbc-95qvj                       1/1     Running   0          5m
+cee-global          grafana-6f54c8cc5f-xpvj5                             6/6     Running   0          5m
+cee-global          grafana-dashboard-metrics-7764c5f8f4-kgthj           1/1     Running   0          5m
+cee-global          kube-state-metrics-79bdbd9db7-jmxxx                  1/1     Running   0          5m
+cee-global          logs-retriever-b7l5v                                 1/1     Running   0          5m
+cee-global          node-exporter-rnhwr                                  1/1     Running   0          5m
+cee-global          ops-center-cee-global-ops-center-5bbdb84597-8rtk5    5/5     Running   0          5m
+cee-global          path-provisioner-l89w6                               1/1     Running   0          5m
+cee-global          pgpool-859f9d7d89-mtks5                              1/1     Running   0          5m
+cee-global          pgpool-859f9d7d89-rwsmk                              1/1     Running   0          5m
+cee-global          postgres-0                                           1/1     Running   0          5m
+cee-global          postgres-1                                           1/1     Running   0          5m
+cee-global          postgres-2                                           1/1     Running   0          5m
+cee-global          prometheus-hi-res-0                                  4/4     Running   0          5m
+cee-global          prometheus-rules-65ccd95b6c-29n6j                    1/1     Running   0          5m
+cee-global          prometheus-scrapeconfigs-synch-85fdc7ccbf-jd54g      1/1     Running   0          5m
+cee-global          pv-manager-9449fc649-h97f4                           1/1     Running   0          5m
+cee-global          pv-provisioner-6775997cc5-hjzf6                      1/1     Running   0          5m
+cee-global          restart-kubelet-75f7d                                1/1     Running   0          5m
+cee-global          show-tac-manager-5cbb8d589b-rpzv9                    2/2     Running   0          5m
+cee-global          smart-agent-cee-global-ops-center-69f7b8d9d5-ptrct   1/1     Running   1          5m
+cee-global          thanos-query-frontend-hi-res-54bbbbbcb6-phbcq        1/1     Running   0          5m
+cee-global          thanos-query-hi-res-6776585f99-bfzx9                 2/2     Running   0          5m
+istio-system        istiod-cf97f695b-6qqzp                               1/1     Running   0          5m
+kube-system         calico-kube-controllers-5c9bfb6cf-jnrc8              1/1     Running   0          5m
+kube-system         calico-node-ptnjs                                    1/1     Running   0          5m
+kube-system         cluster-cert-maintainer-7f879cf5cf-88xkn             1/1     Running   0          5m
+kube-system         coredns-558bd4d5db-kkhd2                             1/1     Running   0          5m
+kube-system         coredns-558bd4d5db-q5lct                             1/1     Running   0          5m
+kube-system         etcd-pod2-cnbng-cp                                   1/1     Running   0          5m
+kube-system         kube-apiserver-pod2-cnbng-cp                         1/1     Running   0          5m
+kube-system         kube-controller-manager-pod2-cnbng-cp                1/1     Running   0          5m
+kube-system         kube-proxy-lp68c                                     1/1     Running   0          5m
+kube-system         kube-scheduler-pod2-cnbng-cp                         1/1     Running   0          5m
+kube-system         maintainer-sgrs7                                     1/1     Running   0          5m
+nginx-ingress       nginx-ingress-controller-b5857775-slgkh              1/1     Running   0          5m
+nginx-ingress       nginx-ingress-default-backend-86496666db-5jgcz       1/1     Running   0          5m
+registry            charts-bng-2021-04-m0-i74-0                          1/1     Running   0          5m
+registry            charts-cee-2020-02-6-i04-0                           1/1     Running   0          5m
+registry            registry-bng-2021-04-m0-i74-0                        1/1     Running   0          5m
+registry            registry-cee-2020-02-6-i04-0                         1/1     Running   0          5m
+registry            software-unpacker-0                                  1/1     Running   0          5m
+smi-certs           ss-cert-provisioner-5d764d5667-27d55                 1/1     Running   0          5m
+smi-secure-access   secure-access-controller-k62z5                       1/1     Running   0          5m
+smi-vips            keepalived-5l789                                     3/3     Running   0          5m
+```
+
+- Check Grafana ingress and try logging to it (username: admin, password: <<your password as per CEE Ops Center config>>)
   
+```
+cisco@pod1-cnbng-cp:~$ kubectl get ingress -A
+NAMESPACE    NAME                                       CLASS    HOSTS                                                          ADDRESS           PORTS     AGE
+bng-bng      cli-ingress-bng-bng-ops-center             <none>   cli.bng-bng-ops-center.192.168.107.150.nip.io                  192.168.107.150   80, 443   5m
+bng-bng      documentation-ingress                      <none>   documentation.bng-bng-ops-center.192.168.107.150.nip.io        192.168.107.150   80, 443   5m
+bng-bng      restconf-ingress-bng-bng-ops-center        <none>   restconf.bng-bng-ops-center.192.168.107.150.nip.io             192.168.107.150   80, 443   5m
+cee-global   cee-global-product-documentation-ingress   <none>   docs.cee-global-product-documentation.192.168.107.150.nip.io   192.168.107.150   80, 443   5m
+cee-global   cli-ingress-cee-global-ops-center          <none>   cli.cee-global-ops-center.192.168.107.150.nip.io               192.168.107.150   80, 443   5m
+cee-global   documentation-ingress                      <none>   documentation.cee-global-ops-center.192.168.107.150.nip.io     192.168.107.150   80, 443   5m
+cee-global   grafana-ingress                            <none>   grafana.192.168.107.150.nip.io                                 192.168.107.150   80, 443   5m
+cee-global   prometheus-hi-res                          <none>   prometheus-hi-res.192.168.107.150.nip.io                       192.168.107.150   80, 443   5m
+cee-global   restconf-ingress-cee-global-ops-center     <none>   restconf.cee-global-ops-center.192.168.107.150.nip.io          192.168.107.150   80, 443   5m
+cee-global   show-tac-manager-ingress                   <none>   show-tac-manager.192.168.107.150.nip.io                        192.168.107.150   80, 443   5m
+registry     charts-ingress                             <none>   charts.192.168.107.150.nip.io                                  192.168.107.150   80, 443   5m
+registry     registry-ingress                           <none>   docker.192.168.107.150.nip.io                                  192.168.107.150   80, 443   5m
+```
+
+We can login to Grafana GUI from Chrome/ Any browser @URL: https://grafana.<your cnBNG CP Cluster VM IP>.nip.io/
+
+![grafana-login1.png]({{site.baseurl}}/images/grafana-login1.png)
+
+- SSH to cnBNG CP Ops Center at port 2024
+  
+```
+cloud-user@inception:~$ ssh admin@192.168.107.150 -p 2024
+admin@192.168.107.150's password: 
+
+      Welcome to the bng CLI on pod2/bng
+      Copyright © 2016-2020, Cisco Systems, Inc.
+      All rights reserved.
+    
+User admin last logged in 2021-11-19T04:12:32.912093+00:00, to ops-center-bng-bng-ops-center-77fb6479fc-dtvt2, from 192.168.107.150 using cli-ssh
+admin connected from 192.168.107.150 using ssh on ops-center-bng-bng-ops-center-77fb6479fc-dtvt2
+[pod1/bng] bng# 
+[pod1/bng] bng# 
+```
+  
+- We can also test Netconf Interface availability of cnBNG Ops Center using ssh
+  
+```
+cloud-user@inception:~$ ssh admin@10.0.0.102 -p 3022 -s netconf    
+Warning: Permanently added '[10.0.0.102]:3022' (RSA) to the list of known hosts.
+admin@10.0.0.102's password: 
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<capabilities>
+<capability>urn:ietf:params:netconf:base:1.0</capability>
+<capability>urn:ietf:params:netconf:base:1.1</capability>
+<capability>urn:ietf:params:netconf:capability:confirmed-commit:1.1</capability>
+<capability>urn:ietf:params:netconf:capability:confirmed-commit:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:candidate:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:rollback-on-error:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:url:1.0?scheme=ftp,sftp,file</capability>
+<capability>urn:ietf:params:netconf:capability:validate:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:validate:1.1</capability>
+<capability>urn:ietf:params:netconf:capability:xpath:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:notification:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:interleave:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:partial-lock:1.0</capability>
+<capability>urn:ietf:params:netconf:capability:with-defaults:1.0?basic-mode=explicit&amp;also-supported=report-all-tagged,report-all</capability>
+<capability>urn:ietf:params:netconf:capability:yang-library:1.0?revision=2019-01-04&amp;module-set-id=a6803bdbd5c766b47137ad86700fff0a</capability>
+<capability>urn:ietf:params:netconf:capability:yang-library:1.1?revision=2019-01-04&amp;content-id=a6803bdbd5c766b47137ad86700fff0a</capability>
+<capability>http://tail-f.com/ns/netconf/actions/1.0</capability>
+<capability>http://cisco.com/cisco-bng-ipam?module=cisco-bng-ipam&amp;revision=2020-01-24</capability>
+<capability>http://cisco.com/cisco-cn-ipam?module=cisco-cn-ipam&amp;revision=2021-02-21</capability>
+<capability>http://cisco.com/cisco-exec-ipam?module=cisco-exec-ipam&amp;revision=2021-06-01</capability>
+<capability>http://cisco.com/cisco-mobile-nf-tls?module=cisco-mobile-nf-tls&amp;revision=2020-06-24</capability>
+<capability>http://cisco.com/cisco-smi-etcd?module=cisco-smi-etcd&amp;revision=2021-09-15</capability>
+<capability>http://tail-f.com/cisco-mobile-common?module=tailf-mobile-common&amp;revision=2019-04-25</capability>
+<capability>http://tail-f.com/cisco-mobile-product?module=tailf-cisco-mobile-product&amp;revision=2018-06-06</capability>
+<capability>http://tail-f.com/ns/aaa/1.1?module=tailf-aaa&amp;revision=2018-09-12</capability>
+<capability>http://tail-f.com/ns/common/query?module=tailf-common-query&amp;revision=2017-12-15</capability>
+<capability>http://tail-f.com/ns/confd-progress?module=tailf-confd-progress&amp;revision=2020-06-29</capability>
+<capability>http://tail-f.com/ns/kicker?module=tailf-kicker&amp;revision=2020-11-26</capability>
+<capability>http://tail-f.com/ns/netconf/query?module=tailf-netconf-query&amp;revision=2017-01-06</capability>
+<capability>http://tail-f.com/ns/webui?module=tailf-webui&amp;revision=2013-03-07</capability>
+<capability>http://tail-f.com/yang/acm?module=tailf-acm&amp;revision=2013-03-07</capability>
+<capability>http://tail-f.com/yang/common?module=tailf-common&amp;revision=2020-11-26</capability>
+<capability>http://tail-f.com/yang/common-monitoring?module=tailf-common-monitoring&amp;revision=2019-04-09</capability>
+<capability>http://tail-f.com/yang/confd-monitoring?module=tailf-confd-monitoring&amp;revision=2019-10-30</capability>
+<capability>http://tail-f.com/yang/last-login?module=tailf-last-login&amp;revision=2019-11-21</capability>
+<capability>http://tail-f.com/yang/netconf-monitoring?module=tailf-netconf-monitoring&amp;revision=2019-03-28</capability>
+<capability>http://tail-f.com/yang/xsd-types?module=tailf-xsd-types&amp;revision=2017-11-20</capability>
+<capability>urn:ietf:params:xml:ns:netconf:base:1.0?module=ietf-netconf&amp;revision=2011-06-01&amp;features=confirmed-commit,candidate,rollback-on-error,validate,xpath,url</capability>
+<capability>urn:ietf:params:xml:ns:netconf:partial-lock:1.0?module=ietf-netconf-partial-lock&amp;revision=2009-10-19</capability>
+<capability>urn:ietf:params:xml:ns:yang:iana-crypt-hash?module=iana-crypt-hash&amp;revision=2014-08-06&amp;features=crypt-hash-sha-512,crypt-hash-sha-256,crypt-hash-md5</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-inet-types?module=ietf-inet-types&amp;revision=2013-07-15</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-netconf-acm?module=ietf-netconf-acm&amp;revision=2018-02-14</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring?module=ietf-netconf-monitoring&amp;revision=2010-10-04</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-netconf-notifications?module=ietf-netconf-notifications&amp;revision=2012-02-06</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults?module=ietf-netconf-with-defaults&amp;revision=2011-06-01</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-restconf-monitoring?module=ietf-restconf-monitoring&amp;revision=2017-01-26</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-x509-cert-to-name?module=ietf-x509-cert-to-name&amp;revision=2014-12-10</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-yang-metadata?module=ietf-yang-metadata&amp;revision=2016-08-05</capability>
+<capability>urn:ietf:params:xml:ns:yang:ietf-yang-types?module=ietf-yang-types&amp;revision=2013-07-15</capability>
+</capabilities>
+<session-id>171</session-id></hello>]]>]]>
+```
