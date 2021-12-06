@@ -216,7 +216,6 @@ admin connected from 172.18.0.1 using ssh on 79bd273aeec7
 - We can also connect to netconf interface of the SMI Deployer through ssh at default port 830
 
 ```
-
 cloud-user@inception:~$ ssh admin@localhost -p 830 -s netconf
 admin@localhost's password: 
 <?xml version="1.0" encoding="UTF-8"?>
