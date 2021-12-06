@@ -399,8 +399,8 @@ admin connected from 192.168.107.150 using ssh on ops-center-bng-bng-ops-center-
   
 ```
 cloud-user@inception:~$ ssh admin@192.168.107.150 -p 3022 -s netconf    
-Warning: Permanently added '[10.0.0.102]:3022' (RSA) to the list of known hosts.
-admin@10.0.0.102's password: 
+Warning: Permanently added '[192.168.107.150]:3022' (RSA) to the list of known hosts.
+admin@192.168.107.150's password: 
 <?xml version="1.0" encoding="UTF-8"?>
 <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
 <capabilities>
