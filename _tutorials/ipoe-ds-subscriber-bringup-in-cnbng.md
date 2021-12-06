@@ -433,7 +433,7 @@ interface Bundle-Ether1.101
 Following is CSR1000v config which is used as CPE in this example.
 
 ```
-interface GigabitEthernet2.101
+interface Bundle-Ether1.101
  encapsulation dot1Q 101
  ip address dhcp
  ipv6 address dhcp rapid-commit
@@ -512,7 +512,7 @@ subscriber-details
             "16777220@sm",
             "acct-sess-id:pod3_DC_16777220@sm",
             "upf:pod100-cnbng-up1",
-            "port-id:pod100-cnbng-up1/Bundle-Ether1.100",
+            "port-id:pod100-cnbng-up1/Bundle-Ether1.101",
             "feat-template:ipoe-1",
             "type:sessmgr",
             "mac:0050.5688.61ae",
@@ -542,7 +542,7 @@ Codes: CN - Connecting, CD - Connected, AC - Activated,
 
 CPID(hex)  Interface               State  Mac Address     Subscriber IP Addr / Prefix (Vrf) Ifhandle
 ---------------------------------------------------------------------------------------------------
-1000014    BE1.100.ip1073741856 AC     0050.5688.61ae  110.1.0.21 (default) 0x1000030 
+1000014    BE1.101.ip1073741856 AC     0050.5688.61ae  110.1.0.21 (default) 0x1000030 
                                                           f:2::1:6 (IANA)
                                                           2001:db1:0:7::/64 (IAPD)
 Session-count: 1
@@ -553,7 +553,7 @@ Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 110.1.0.21, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/4/12 ms
-RP/0/RP0/CPU0:pod100-cnbng-up1#ping f:2::1:6 source Gi0/0/0/0.100.ip1073741856
+RP/0/RP0/CPU0:pod100-cnbng-up1#ping f:2::1:6 source BE1.101.ip1073741856
 Mon Dec  6 05:03:00.757 UTC
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to f:2::1:6, timeout is 2 seconds:
@@ -569,7 +569,7 @@ RP/0/RP0/CPU0:pod100-cnbng-up1#show route subscriber
 Mon Dec  6 05:01:51.410 UTC
 
 A    110.1.0.0/16 [1/0] via 0.0.0.0, 3d12h
-A    110.1.0.21/32 is directly connected, 3d12h, Bundle-Ether1.100.ip107374185
+A    110.1.0.21/32 is directly connected, 3d12h, Bundle-Ether1.101.ip107374185
 
 RP/0/RP0/CPU0:pod100-cnbng-up1#show route ipv6 subscriber 
 Mon Dec  6 05:01:31.667 UTC
@@ -577,17 +577,17 @@ Mon Dec  6 05:01:31.667 UTC
 A    f:2::1:0/112 
       [1/0] via ::, 3d12h
 A    f:2::1:6/128 is directly connected,
-      3d12h, Bundle-Ether1.100.ip1073741856
+      3d12h, Bundle-Ether1.101.ip1073741856
 A    2001:db1::/48 
       [1/0] via ::, 3d12h
 A    2001:db1:0:7::/64 
-      [2/0] 3d12h, Bundle-Ether1.100.ip1073741856
+      [2/0] 3d12h, Bundle-Ether1.101.ip1073741856
 ```
 
 - Notice that the QoS poilicy and ACLs are applied to subscriber interface
 
 ```
-RP/0/RP0/CPU0:pod100-cnbng-up1#show subscriber running-config interface name  Gi0/0/0/0.100.ip1073741856
+RP/0/RP0/CPU0:pod100-cnbng-up1#show subscriber running-config interface name BE1.101.ip1073741856
 Mon Dec  6 04:59:58.094 UTC
 Building configuration...
 !! IOS XR Configuration 7.5.1.01I
