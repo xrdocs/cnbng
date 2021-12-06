@@ -93,7 +93,7 @@ instance instance-id 1
  exit
  endpoint udp-proxy
 !! Change this IP to your setup based IP
-  vip-ip 10.0.100.1
+  <mark>vip-ip 10.0.100.1</mark>
  exit
 exit
 deployment
