@@ -85,11 +85,11 @@ network:
         ens160:
             dhcp4: false
             addresses:
-               - <mark><<inception VM IP>>/<<your subnet>></mark>
-            gateway4: <<your gateway IP>>
+               - <mark>{inception VM IP}/{your subnet}</mark>
+            gateway4: {your gateway IP}
             nameservers:
-                search: [<mark><<your domain>></mark>]
-                addresses: [<mark><<your dns server>></mark>]
+                search: [<mark>{your domain}</mark>]
+                addresses: [<mark>{your dns server}</mark>]
         ens3:
             dhcp4: true
         eth0:
