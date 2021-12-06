@@ -45,7 +45,7 @@ The hardware requirements for Inception VM canbe reduced for non-production depl
 - Storage: 100 GB
 - NIC interfaces: The number of NIC interfaces required is based on the K8s network and VMware host network reachability. Refer to cnBNG Concepts Part-1 document for more details on networking
 
-## Prerequisite
+## Prerequisite (optional, if DC already exists)
 1. Make sure vCenter is installed (ver 6.7 is tested)
 1. In the vCenter, right click and select New Data Center
 	- Provide name of the data-center and click ok
@@ -83,11 +83,11 @@ network:
         ens160:
             dhcp4: false
             addresses:
-               - 192.168.107.166/25
-            gateway4: 192.168.107.129
+               - <<inception VM IP>>/25
+            gateway4: <<your gateway IP>>
             nameservers:
-                search: [cisco.com]
-                addresses: [72.163.128.140]
+                search: [<<your domain>>]
+                addresses: [<<your dns server>>]
         ens3:
             dhcp4: true
         eth0:
@@ -106,7 +106,7 @@ network:
 - Now change the hostname of the VM to: <your-inception-vm-name>, using:
   
 ```
-sudo hostnamectl set-hostname <your-inception-vm-name>
+sudo hostnamectl set-hostname <<your-inception-vm-name>>
 E.g.
 sudo hostnamectl set-hostname inception
 ```
