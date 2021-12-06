@@ -85,11 +85,11 @@ network:
         ens160:
             dhcp4: false
             addresses:
-               - <mark>{inception VM IP}/{your subnet}</mark>
-            gateway4: {your gateway IP}
+               - <mark>{inception-VM-IP}/{your-subnet}</mark>
+            gateway4: {your-gateway-IP}
             nameservers:
-                search: [<mark>{your domain}</mark>]
-                addresses: [<mark>{your dns server}</mark>]
+                search: [<mark>{your-domain}</mark>]
+                addresses: [<mark>{your-dns-server}</mark>]
         ens3:
             dhcp4: true
         eth0:
@@ -112,7 +112,7 @@ network:
 <div class="highlighter-rouge">
 <pre class="highlight">
 <code>
-sudo hostnamectl set-hostname <mark><<your-inception-vm-name>></mark>
+sudo hostnamectl set-hostname <mark>{your-inception-vm-name}</mark>
 E.g.
 sudo hostnamectl set-hostname <mark>inception</mark>
 </code>
@@ -131,8 +131,8 @@ sudo hostnamectl set-hostname <mark>inception</mark>
 cloud-user@inception:/var/tmp/offline-cm$ ls -altr
 total 2984112
 drwxrwxrwt 6 root          root                4096 Apr 12 20:57 ..
--rw-rw-r-- 1 kashyap-cloud kashyap-cloud 3055718400 Apr 12 21:08 <mark>cluster-deployer-2020-04-12.tar</mark>
-drwxrwxr-x 2 kashyap-cloud kashyap-cloud       4096 Apr 12 21:50 .
+-rw-rw-r-- 1 cloud-user cloud-user 3055718400 Apr 12 21:08 <mark>cluster-deployer-2020-04-12.tar</mark>
+drwxrwxr-x 2 cloud-user cloud-user       4096 Apr 12 21:50 .
 </code>
 </pre>
 </div>
@@ -209,7 +209,7 @@ drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 .
 <div class="highlighter-rouge">
 <pre class="highlight">
 <code>
-cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ <mark>./deploy --external-ip 172.22.18.55 --first-boot-password "<<your password>>"</mark>
+cloud-user@inception:/var/tmp/offline-cm/data/deployer-inception$ <mark>./deploy --external-ip 172.22.18.55 --first-boot-password "your-password"</mark>
 2020-04-13 19:49:16.261 INFO deploy: Directory Path /var/tmp/offline-cm/data/deployer-inception
 2020-04-13 19:49:16.261 INFO deploy: Directory is /var/tmp/offline-cm/data/deployer-inception/../
 2020-04-13 19:49:16.261 INFO deploy: Default info: external_ip: 172.22.18.55 and tar_name: cluster-deployer-2020-04-12
