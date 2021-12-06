@@ -12,13 +12,15 @@ We need following softwares for deployment of Inception Server:
 
 - Customized Base Ubuntu ISO Image File (provided by SMI)
 - Cluster Deployer Tarball
-- Summary Steps for Installation of Inception Server
+
+## Summary Steps for Installation of Inception Server
 
 Inception Server is deployed in two steps in VMWare ESXi environment:
 
-Installation of Inception VM: In this step Customized Ubuntu VM is deployed using SMI provided Base ISO file
-Installation of SMI Cluster Deployer using the tarball in Inception Ubuntu VM
-Inception VM Dimensioning
+- Installation of Inception VM: In this step Customized Ubuntu VM is deployed using SMI provided Base ISO file
+- Installation of SMI Cluster Deployer using the tarball in Inception Ubuntu VM
+
+## Inception VM Dimensioning
 The following are the minimum hardware requirements for deploying Inception VM using the SMI Base Image ISO on VMware:
 
 - CPU: 8 vCPU
@@ -33,7 +35,7 @@ The hardware requirements for Inception VM canbe reduced for non-production depl
 - Storage: 100 GB
 - NIC interfaces: The number of NIC interfaces required is based on the K8s network and VMware host network reachability. Refer to cnBNG Concepts Part-1 document for more details on networking
 
-### Prerequisite
+## Prerequisite
 1. Make sure vCenter is installed (ver 6.7 is tested)
 1. In the vCenter, right click and select New Data Center
 1. Provide name of the data-center and click ok
