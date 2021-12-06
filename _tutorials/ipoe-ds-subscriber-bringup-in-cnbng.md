@@ -51,7 +51,9 @@ Entering configuration mode terminal
 
 - Apply following initial configuration. With changes to "endpoint radius" and "udp proxy" configs. Both "endpoint radius" and "udp-proxy" should use IP of cnBNG CP service network side protocol VIP or in case of AIO it should be the IP of AIO VM used for peering between cnBNG CP and UP.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 cdl node-type session
 cdl zookeeper replica 1
 cdl logging default-log-level error
@@ -82,11 +84,11 @@ instance instance-id 1
  exit
  endpoint radius
 !! Change this IP to your setup based IP
-  vip-ip 10.0.100.1
+<mark>   vip-ip 10.0.100.1</mark>
   interface coa-nas
    sla response 140000
 !! Change this IP to your setup based IP
-   vip-ip 10.0.100.1 vip-port 2000
+<mark>   vip-ip 10.0.100.1 vip-port 2000</mark>
   exit
  exit
  endpoint udp-proxy
@@ -116,12 +118,16 @@ instances instance 1
  slice-name 1
 exit
 local-instance instance 1
-```
+</code>
+</pre>
+</div>
 
 - Put system in running mode and commit the changes
 
-```
-[pod100/bng] bng(config)# system mode running 
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+[pod100/bng] bng(config)# <mark>system mode running </mark>   
 [pod100/bng] bng(config)# commit
 Commit complete.
 [pod100/bng] bng(config)# 
@@ -130,7 +136,9 @@ Helm update is STARTING.  Trigger for update is STARTUP.
 [pod100/bng] bng(config)# 
 Message from confd-api-manager at 2021-12-01 12:36:08...
 Helm update is SUCCESS.  Trigger for update is STARTUP.
-```
+</code>
+</pre>
+</div>
 
 - Wait for system to deploy all PODs. Verify that all PODs are deployed for cnBNG. Four PODs will be in Init state at this moment, which is ok.
 
