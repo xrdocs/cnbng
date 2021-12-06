@@ -148,6 +148,7 @@ clusters <<your cnBNG CP Cluster Name>>
 ```
 
 In the above config, we have enabled ingress for Grafana access and configured two ntp servers.
+{: .notice--info}
 
 - Create AIO Node config:
 
