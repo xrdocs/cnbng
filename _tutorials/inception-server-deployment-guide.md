@@ -7,6 +7,7 @@ author: Gurpreet Dhaliwal
 ## Introduction
 Inception Server is used to deploy the SMI cluster. It packages Ansible Swcripts which makes the deployment of SMI with all addons as a one click operation. The server also has a confD, which offers a user and machine friendly interfaces for SMI deployment. The main interfaces offered are Netconf, Restconf and CLI. In this tutorial we will deploy Inception Server in VMWare ESXi environment. The VMware vSphere Hypervisor (ESXi) 6.5 and 6.7 has been fully tested and meets performance benchmarks.
 
+![inception1.png]({{site.baseurl}}/images/inception1.png)
 
 We need following softwares for deployment of Inception Server:
 
@@ -38,9 +39,12 @@ The hardware requirements for Inception VM canbe reduced for non-production depl
 ## Prerequisite
 1. Make sure vCenter is installed (ver 6.7 is tested)
 1. In the vCenter, right click and select New Data Center
-1. Provide name of the data-center and click ok
+	- Provide name of the data-center and click ok
 1. Right click on the newly created datacenter and select New Cluster.
-1. Provide name of the cluster and click ok (all other options remain default)
+	- Provide name of the cluster and click ok (all other options remain default)
+
+![vmware-dc.png]({{site.baseurl}}/images/vmware-dc.png)
+
 1. Now add a host to the cluster. By selecting add host from right click menu on newly created cluster. Follow on screen instructions to add the host.
 
 ## Step 1: Inception VM deployment using Base ISO Image provided by SMI
