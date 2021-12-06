@@ -398,7 +398,7 @@ admin connected from 192.168.107.150 using ssh on ops-center-bng-bng-ops-center-
 - We can also test Netconf Interface availability of cnBNG Ops Center using ssh
   
 ```
-cloud-user@inception:~$ ssh admin@10.0.0.102 -p 3022 -s netconf    
+cloud-user@inception:~$ ssh admin@192.168.107.150 -p 3022 -s netconf    
 Warning: Permanently added '[10.0.0.102]:3022' (RSA) to the list of known hosts.
 admin@10.0.0.102's password: 
 <?xml version="1.0" encoding="UTF-8"?>
