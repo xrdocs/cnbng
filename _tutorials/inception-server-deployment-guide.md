@@ -83,7 +83,7 @@ network:
         ens160:
             dhcp4: false
             addresses:
-               - <<inception VM IP>>/25
+               - <<inception VM IP>>/<<your subnet>>
             gateway4: <<your gateway IP>>
             nameservers:
                 search: [<<your domain>>]
