@@ -508,7 +508,9 @@ INSTANCE  ENDPOINT      LOCAL ADDRESS    PEER ADDRESS     DIRECTION  POD INSTANC
 
 - Verify that the CP-UP Association is Up and Active on cnBNG UP
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 RP/0/RP0/CPU0:pod100-cnbng-up1#show cnbng-nal cp connection status location 0/0/CPU0 
 Wed Dec  1 13:59:35.533 UTC
 
@@ -529,19 +531,23 @@ Control-Plane configurations:
  
  Association retry count: 10
 
- Connection Status: Up
+ Connection Status: <mark>Up</mark>
  Connection Status time stamp:  Wed Dec  1 13:59:29 2021
 
  Connection Prev Status: Down
  Connection Prev Status time stamp:  Wed Dec  1 13:59:28 2021
 
- Association status: Active
+ Association status: <mark>Active</mark>
  Association status time stamp: Wed Dec  1 13:59:28 2021
-```
+</code>
+</pre>
+</div>
 
 - Verify subscriber session is up on cnBNG CP
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 [pod100/bng] bng# show subscriber session 
 subscriber-details 
 {
@@ -556,23 +562,27 @@ subscriber-details
             "port-id:pod100-cnbng-up1/Bundle-Ether1.101",
             "feat-template:ipoe-1",
             "type:sessmgr",
-            "mac:0050.5688.61ae",
+            "mac:<mark>0050.5688.61ae</mark>",
             "sesstype:ipoe",
             "up-subs-id:pod100-cnbng-up1/1073741888",
             "smupstate:smUpSessionCreated",
-            "smstate:established",
-            "afi:dual"
+            "smstate:<mark>established</mark>",
+            "<mark>afi:dual</mark>"
           ]
         }
       ]
     }
   ]
 }
-```
+</code>
+</pre>
+</div>
 
 - Verify that the subscriber session is up and working on cnBNG UP
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 RP/0/RP0/CPU0:pod100-cnbng-up1#show cnbng-nal subscriber all  location 0/0/CPU0                         
 Mon Dec  6 05:02:13.744 UTC
 
@@ -583,9 +593,9 @@ Codes: CN - Connecting, CD - Connected, AC - Activated,
 
 CPID(hex)  Interface               State  Mac Address     Subscriber IP Addr / Prefix (Vrf) Ifhandle
 ---------------------------------------------------------------------------------------------------
-1000014    BE1.101.ip1073741856 AC     0050.5688.61ae  110.1.0.21 (default) 0x1000030 
+<mark>1000014    BE1.101.ip1073741856 AC     0050.5688.61ae  110.1.0.21 (default) 0x1000030 
                                                           f:2::1:6 (IANA)
-                                                          2001:db1:0:7::/64 (IAPD)
+                                                          2001:db1:0:7::/64 (IAPD)</mark>
 Session-count: 1
 
 RP/0/RP0/CPU0:pod100-cnbng-up1#ping 110.1.0.21 source 110.1.0.1
@@ -601,33 +611,41 @@ Sending 5, 100-byte ICMP Echos to f:2::1:6, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 2/4/13 ms
 RP/0/RP0/CPU0:pod100-cnbng-up1#
-```
+</code>
+</pre>
+</div>
 
 - Notice that the subscriber subnet route is programmed in RIB along with subscriber route
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 RP/0/RP0/CPU0:pod100-cnbng-up1#show route subscriber 
 Mon Dec  6 05:01:51.410 UTC
 
-A    110.1.0.0/16 [1/0] via 0.0.0.0, 3d12h
-A    110.1.0.21/32 is directly connected, 3d12h, Bundle-Ether1.101.ip107374185
+A    <mark>110.1.0.0/16</mark> [1/0] via 0.0.0.0, 3d12h  << Subnet programming is done from cnBNG CP based on IPAM pool allocation
+A    <mark>110.1.0.21/32</mark> is directly connected, 3d12h, <mark>Bundle-Ether1.101.ip107374185</mark>
 
 RP/0/RP0/CPU0:pod100-cnbng-up1#show route ipv6 subscriber 
 Mon Dec  6 05:01:31.667 UTC
 
-A    f:2::1:0/112 
+A    <mark>f:2::1:0/112</mark>      << Subnet programming is done from cnBNG CP based on IPAM pool allocation
       [1/0] via ::, 3d12h
-A    f:2::1:6/128 is directly connected,
+A    <mark>f:2::1:6/128</mark> is directly connected,
       3d12h, Bundle-Ether1.101.ip1073741856
-A    2001:db1::/48 
+A    <mark>2001:db1::/48</mark>		<< Subnet programming is done from cnBNG CP based on IPAM pool allocation
       [1/0] via ::, 3d12h
-A    2001:db1:0:7::/64 
+A    <mark>2001:db1:0:7::/64</mark>
       [2/0] 3d12h, Bundle-Ether1.101.ip1073741856
-```
+</code>
+</pre>
+</div>
 
 - Notice that the QoS poilicy and ACLs are applied to subscriber interface
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 RP/0/RP0/CPU0:pod100-cnbng-up1#show subscriber running-config interface name BE1.101.ip1073741856
 Mon Dec  6 04:59:58.094 UTC
 Building configuration...
@@ -635,22 +653,26 @@ Building configuration...
 subscriber-label 0x40000020
 dynamic-template
  type user-profile U00000020
-  ipv4 access-group iACL_BNG_IPv4 ingress
+  ipv4 access-group <mark>iACL_BNG_IPv4</mark> ingress
   ipv6 enable
   ipv4 mtu 1500
   ipv4 unnumbered Loopback1
  !
- type service-profile FT_Plan_100mbps
-  service-policy input PM_Plan_100mbps_input
-  service-policy output PM_Plan_100mbps_output
+ <mark>type service-profile FT_Plan_100mbps</mark>
+  <mark>service-policy input PM_Plan_100mbps_input</mark>
+  <mark>service-policy output PM_Plan_100mbps_output</mark>
  !
 !
 end
-```
+</code>
+</pre>
+</div>
 
 - The policy and ACL definitions exist on cnBNG UP
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 RP/0/RP0/CPU0:pod100-cnbng-up1#show running-config policy-map 
 Mon Dec  6 05:03:49.479 UTC
 policy-map PM_Plan_100mbps_input
@@ -686,4 +708,6 @@ ipv6 access-list iACL_BNG_IPv6
  30 deny udp any any eq 646
  40 permit ipv6 any any
 !
-```
+</code>
+</pre>
+</div>
