@@ -16,7 +16,7 @@ Inception Server is used to deploy the SMI cluster. It packages Ansible Swcripts
 
 ![inception1.png]({{site.baseurl}}/images/inception1.png)
 
-<img src="{{site.baseurl}}/images/inception1.png" alt="inception" width="200"/>
+[//]: <img src="{{site.baseurl}}/images/inception1.png" alt="inception" width="200"/>
 
 We need following softwares for deployment of Inception Server:
 
