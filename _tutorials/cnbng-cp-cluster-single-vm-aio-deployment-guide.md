@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 date: '2021-12-06 18:19 +0530'
 title: cnBNG CP Cluster Single VM (AIO) Deployment Guide
 author: Gurpreet Dhaliwal
