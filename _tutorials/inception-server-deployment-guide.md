@@ -33,37 +33,37 @@ The hardware requirements for Inception VM canbe reduced for non-production depl
 - NIC interfaces: The number of NIC interfaces required is based on the K8s network and VMware host network reachability. Refer to cnBNG Concepts Part-1 document for more details on networking
 
 ### Prerequisite
-- Make sure vCenter is installed (ver 6.7 is tested)
-- In the vCenter, right click and select New Data Center
-- Provide name of the data-center and click ok
-- Right click on the newly created datacenter and select New Cluster.
-- Provide name of the cluster and click ok (all other options remain default)
+1. Make sure vCenter is installed (ver 6.7 is tested)
+1. In the vCenter, right click and select New Data Center
+1. Provide name of the data-center and click ok
+1. Right click on the newly created datacenter and select New Cluster.
+1. Provide name of the cluster and click ok (all other options remain default)
+1. Now add a host to the cluster. By selecting add host from right click menu on newly created cluster. Follow on screen instructions to add the host.
 
-
-
-
-
-
-4. Now add a host to the cluster. By selecting add host from right click menu on newly created cluster. Follow on screen instructions to add the host.
-
-Step 1: Inception VM deployment using Base ISO Image provided by SMI
+### Step 1: Inception VM deployment using Base ISO Image provided by SMI
 Download the SMI base ISO image. This is the image which will be used for Ubuntu VM deployment. This is customized Ubuntu for SMI. Now, follow below steps to deploy Ubuntu VM using the downloaded ISO file:
 
-Download the SMI Base ISO file and copy the file to the VM Datastore
-In the vCenter, select Create a New Virtual Machine
-Specify name of the VM and select the Datacenter
-Next select the host for the VM
-Select the datastore
-Select compatibility (ESXi 6.7 or later)
-Select guest OS: Guest Family- Linux, Guest OS Version- Ubuntu Linux (64-bit)
-Customize Hardware:
-vCPU: 8, Memory: 16GB, New Hard disk: 100Gb (this will depend on the dimensioning selected)
-Under Network: select management network ("VM Network" in most cases
-Click New CD/DVD Drive and do the following:
-Select Datastore ISO file option to boot from the SMI Base .iso file. Browse to the location of the .iso file on the datastore set in Step 1.
-In the Device Status field, select Connect at power on checkbox.
-After the VM boots up: login to the VM (user: cloud-user, password: Cisco_123). You will be prompted to change the password immediately
-Now setup Networking by editing /etc/netplan/50-cloud-init.yaml file. Here is a sample file config:
+- Download the SMI Base ISO file and copy the file to the VM Datastore
+- In the vCenter, select Create a New Virtual Machine
+- Specify name of the VM and select the Datacenter
+- Next select the host for the VM
+- Select the datastore
+- Select compatibility (ESXi 6.7 or later)
+- Select guest OS: Guest Family- Linux, Guest OS Version- Ubuntu Linux (64-bit)
+- Customize Hardware:
+- vCPU: 8, Memory: 16GB, New Hard disk: 100Gb (this will depend on the dimensioning selected)
+- Under Network: select management network ("VM Network" in most cases
+- Click New CD/DVD Drive and do the following:
+- Select Datastore ISO file option to boot from the SMI Base .iso file. Browse to the location of the .iso file on the datastore set in Step 1.
+- In the Device Status field, select Connect at power on checkbox.
+- After the VM boots up: login to the VM (user: cloud-user, password: Cisco_123). You will be prompted to change the password immediately
+- Now setup Networking by editing "/etc/netplan/50-cloud-init.yaml" file. Here is a sample file config:
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+
 network:
     ethernets:
         eno1:
@@ -83,6 +83,10 @@ network:
         eth0:
             dhcp4: true
     version: 2
+
+</code>
+</pre>
+</div>
 Note1: Sometimes interface is not shown as ens160, in that case it is a good idea to search for the interface using ifconfig -a command. Generally lower ens number is the first NIC attached to the VM, and higher number is the last. 
 
 Note2: We can also use cloud-init for os changes
