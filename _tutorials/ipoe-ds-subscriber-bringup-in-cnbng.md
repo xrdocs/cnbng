@@ -492,15 +492,19 @@ Following is Freeradius profile used in this tutorial
 
 - Verfiy that the cnBNG CP-UP association is up and Active on cnBNG CP
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 [pod100/bng] bng# show peers
 GR                                                                                        CONNECTED                                                         INTERFACE  
 INSTANCE  ENDPOINT      LOCAL ADDRESS    PEER ADDRESS     DIRECTION  POD INSTANCE   TYPE  TIME       RPC     ADDITIONAL DETAILS                             NAME       
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 0         RadiusServer  -                10.0.100.4:1812  Outbound   radius-ep-0    Udp   3 days     Radius  Status: Active,Type: Auth                      <none>     
 0         RadiusServer  -                10.0.100.4:1813  Outbound   radius-ep-0    Udp   3 days     Radius  Status: Active,Type: Acct                      <none>     
-1         n4            10.0.100.1:8805  10.0.100.2:8805  Inbound    bng-nodemgr-0  Udp   3 days     UPF     Name: pod100-cnbng-up1,Nm: 0/0,Status: ACTIVE  <none>  
-```
+1         n4            <mark>10.0.100.1:8805  10.0.100.2:8805</mark>  Inbound    bng-nodemgr-0  Udp   3 days     UPF     Name: <mark>pod100-cnbng-up1</mark>,Nm: 0/0,Status: <mark>ACTIVE</mark>  <none>
+</code>
+</pre>
+</div>
 
 - Verify that the CP-UP Association is Up and Active on cnBNG UP
 
