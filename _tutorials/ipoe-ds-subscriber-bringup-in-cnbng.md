@@ -2,7 +2,7 @@
 published: true
 date: '2021-12-06 19:12 +0530'
 title: IPoE DS Subscriber Bringup in cnBNG
-author: Gurpreet Dhaliwal
+author: Gurpreet S
 profile: hidden
 position: hidden
 ---
