@@ -21,7 +21,7 @@ feature_row2:
     btn_label: "Check out the Blogs!"
     btn_class: "btn--inverse"
 feature_row3:
-  - image_path: tutorial-board.jpg
+  - image_path: tutorials.png
     alt: "fully responsive"
     title: "Tutorials"
     excerpt: 'Step by Step Tutorials to catch the gotchas!'
