@@ -13,7 +13,7 @@ feature_row1:
     btn_label: "Check out the docs!"
     btn_class: "btn--inverse"
 feature_row2:
-  - image_path: blog.png
+  - image_path: images/blog.png
     alt: "fully responsive"
     title: "Blogs"
     excerpt: 'Periodic Blogs to keep you updated on the latest tools, applications, events and architectural changes'
@@ -21,7 +21,7 @@ feature_row2:
     btn_label: "Check out the Blogs!"
     btn_class: "btn--inverse"
 feature_row3:
-  - image_path: tutorials.png
+  - image_path: images/tutorials.png
     alt: "fully responsive"
     title: "Tutorials"
     excerpt: 'Step by Step Tutorials to catch the gotchas!'
