@@ -18,7 +18,7 @@ Radius profile configured here is to activate 100mbps plan service with v4 and v
 
 ## Prerequisite:
 - cnBNG CP is already deployed and Ops Center is accessible. We will be using Ops Center CLI interface for configurations in this tutorial
-- cnBNG CP Ops Center is initialized with init config and system is alreday in running mode
+- cnBNG CP Ops Center is initialized with init config and system is already in running mode
 - cnBNG CP service network can reach cnBNG UP:
 	- In multi VM deployment, this means protocol VM VIP for service network is reachable from cnBNG UP for PFCP communications
     - In single Node/VM AIO deployment, this means AIO VM IP is reachable from cnBNG UP
