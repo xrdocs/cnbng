@@ -2,7 +2,7 @@
 published: true
 date: '2021-12-06 14:59 +0530'
 title: Inception Server Deployment Guide
-author: Gurpreet S
+author: Gurpreet Dhaliwal
 position: hidden
 tags:
   - cnbng
