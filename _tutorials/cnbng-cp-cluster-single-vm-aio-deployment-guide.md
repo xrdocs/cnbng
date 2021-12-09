@@ -20,6 +20,8 @@ The deployment is done in 3 steps, where the 3rd step uses automation provided b
 	- Customized Base OS Ubuntu VM Deployment (automated for ESXi)
 	- SMI Cluster Deployment, which includes CN Infra (automated)
 	- CEE and cnBNG CP Application deployment (automated)
+    
+After the deployment, we generally apply the initial init-config for cnBNG CP Ops Center and move the system to running mode. In this tutorial this step is explained towards the end.
 
 ## Networking
 
