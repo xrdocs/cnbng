@@ -6,7 +6,7 @@ author: "Cisco Programmability Team"
 
 feature_row1:
   - image_path: techdoc.jpg
-    alt: "fully responsive"
+    alt: "Tutorials"
     title: "Technical Documentation"
     excerpt: 'Detailed Technical Documentation on the Application Hosting Infrastructure of IOS-XR'
     url: "/techdocs"
@@ -14,17 +14,17 @@ feature_row1:
     btn_class: "btn--inverse"
 feature_row2:
   - image_path: blog.png
-    alt: "fully responsive"
+    alt: "Blogs"
     title: "Blogs"
-    excerpt: 'Periodic Blogs to keep you updated on the latest tools, applications, events and architectural changes'
+    excerpt: 'Periodic Blogs on cnBNG to keep you updated on the latest tools, applications, events and architectural changes'
     url: "/blogs"
     btn_label: "Check out the Blogs!"
     btn_class: "btn--inverse"
 feature_row3:
   - image_path: tutorials.png
-    alt: "fully responsive"
+    alt: "Tutorials"
     title: "Tutorials"
-    excerpt: 'Step by Step Tutorials to catch the gotchas!'
+    excerpt: 'Detailed Technical tutorials to understand Cloud Native BNG concepts with all gotchas!'
     url: "/tutorials"
     btn_label: "Check out the tutorials!"
     btn_class: "btn--inverse"
