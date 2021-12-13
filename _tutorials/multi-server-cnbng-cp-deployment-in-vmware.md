@@ -19,6 +19,7 @@ We will deploy Multi server/node cnBNG CP in following steps:
 	- Provide name of the data-center and click ok
 1. Right click on the newly created datacenter and select New Cluster.
 	- Provide name of the cluster and click ok (all other options remain default)
+    
 ![vmware-dc1.png]({{site.baseurl}}/images/vmware-dc1.png)
 1. Now add a host to the cluster. By selecting add host from right click menu on newly created cluster. Follow on screen instructions to add the host.
 
