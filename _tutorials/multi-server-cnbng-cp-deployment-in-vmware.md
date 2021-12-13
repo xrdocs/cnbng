@@ -468,7 +468,7 @@ clusters cnbng-cp-cluster1
 network:
     version: 2
     ethernets:
-{ % if master_vm is defined and master_vm == 'true' \%}   
+{%% if master_vm is defined and master_vm == 'true' \%}   
         ens192:
             addresses:
             - \{{K8S_SSH_IP\}}/24
