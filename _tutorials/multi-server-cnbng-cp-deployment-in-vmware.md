@@ -12,6 +12,7 @@ In this tutorial we will learn how to deploy high capacity cnBNG CP in multi ser
 We will deploy Multi server/node cnBNG CP in following steps:
 1. VMWare ESXi Networking Preparation
 1. Inception Server Deployment
+1. SSH Key Generation
 1. cnBNG CP Cluster Configuration
 1. cnBNG CP Deployment
 
