@@ -486,7 +486,7 @@ network:
 { % else %}
         ens192:
             addresses:
-            - {{K8S_SSH_IP}}/24
+            - { {K8S_SSH_IP}}/24
             dhcp4: false           
             routes:
             -   metric: 50
