@@ -468,7 +468,7 @@ clusters cnbng-cp-cluster1
 network:
     version: 2
     ethernets:
-{% if master_vm is defined and master_vm == 'true' %}   
+\{\% if master_vm is defined and master_vm == 'true' \%\}   
         ens192:
             addresses:
             - {{K8S_SSH_IP}}/24
@@ -485,7 +485,7 @@ network:
                 search:
                 - cisco.com
             gateway4: 10.81.103.1                                                     
-{% else %}
+\{\% else \%\}
         ens192:
             addresses:
             - {{K8S_SSH_IP}}/24
@@ -494,7 +494,7 @@ network:
             -   metric: 50
                 to: 0.0.0.0/0
                 via: 212.212.212.101    
-{% endif %}
+\{\% endif \%\}
 </code>
 </pre>
 </div>
