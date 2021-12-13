@@ -2,7 +2,7 @@
 published: true
 date: '2021-12-13 08:39 +0530'
 title: Multi-server cnBNG CP Deployment in VMWare
-author: Gurpreet Dhaliwal
+author: Gurpreet D
 position: hidden
 ---
 In this tutorial we will learn how to deploy high capacity cnBNG CP in multi server VMWare ESXi environment. The deployment of cnBNG CP is fully automated through Inception Deployer or Cluster Manager. 
