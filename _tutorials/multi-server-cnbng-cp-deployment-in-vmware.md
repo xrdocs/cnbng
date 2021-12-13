@@ -471,7 +471,7 @@ network:
 { % if master_vm is defined and master_vm == 'true' %}   
         ens192:
             addresses:
-            - '{{K8S_SSH_IP}}'/24
+            - '{ { K8S_SSH_IP } }'/24
             dhcp4: false
             routes:
             -   metric: 50
