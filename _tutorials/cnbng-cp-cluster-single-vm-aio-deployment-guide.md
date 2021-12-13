@@ -465,16 +465,16 @@ If you have deployed cnBNG CP a fresh then most probably, initial cnBNG CP confi
 - SSH login to cnBNG CP Ops Center CLI
 
 ```
-cisco@pod100-cnbng-cp:~$ ssh admin@10.0.100.1 -p 2024         
-Warning: Permanently added '[10.0.100.1]:2024' (RSA) to the list of known hosts.
-admin@10.0.100.1's password: 
+cisco@pod100-cnbng-cp:~$ ssh admin@192.168.107.150 -p 2024         
+Warning: Permanently added '[192.168.107.150]:2024' (RSA) to the list of known hosts.
+admin@192.168.107.150's password: 
 
       Welcome to the bng CLI on pod100/bng
       Copyright © 2016-2020, Cisco Systems, Inc.
       All rights reserved.
     
-User admin last logged in 2021-12-01T11:42:45.247257+00:00, to ops-center-bng-bng-ops-center-5666d4cb6-dj7sv, from 10.0.100.1 using cli-ssh
-admin connected from 10.0.100.1 using ssh on ops-center-bng-bng-ops-center-5666d4cb6-dj7sv
+User admin last logged in 2021-12-01T11:42:45.247257+00:00, to ops-center-bng-bng-ops-center-5666d4cb6-dj7sv, from 192.168.107.150 using cli-ssh
+admin connected from 192.168.107.150 using ssh on ops-center-bng-bng-ops-center-5666d4cb6-dj7sv
 [pod100/bng] bng# 
 ```
 
@@ -520,17 +520,17 @@ instance instance-id 1
  endpoint pppoe
  exit
  endpoint radius
-!! Change this IP to your setup based IP
-   <mark>vip-ip 10.0.100.1</mark>
+!! Change this IP to your AIO VM IP
+   <mark>vip-ip 192.168.107.150</mark>
   interface coa-nas
    sla response 140000
-!! Change this IP to your setup based IP
-   <mark>vip-ip 10.0.100.1 vip-port 2000</mark>
+!! Change this IP to your AIO VM IP
+   <mark>vip-ip 192.168.107.150 vip-port 2000</mark>
   exit
  exit
  endpoint udp-proxy
-!! Change this IP to your setup based IP
-  <mark>vip-ip 10.0.100.1</mark>
+!! Change this IP to your AIO VM IP
+  <mark>vip-ip 192.168.107.150</mark>
  exit
 exit
 deployment
