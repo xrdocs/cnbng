@@ -1,7 +1,8 @@
 ---
-published: false
+published: true
 date: '2021-12-13 11:46 +0530'
 title: test
+position: hidden
 ---
 ## A New Post
 
