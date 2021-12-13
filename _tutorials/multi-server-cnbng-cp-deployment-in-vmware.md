@@ -1117,3 +1117,168 @@ admin@10.81.103.101's password:
 </capabilities>
 <session-id>171</session-id></hello>]]>]]>
 ```
+
+## Initial cnBNG CP Configurations
+If you have deployed cnBNG CP a fresh then most probably, initial cnBNG CP configuration is not applied on Ops Center. Follow below steps to apply initial configuratuon to cnBNG CP Ops Center
+
+- SSH login to cnBNG CP Ops Center CLI
+
+```
+cisco@pod100-cnbng-cp:~$ ssh admin@10.81.103.101 -p 2024         
+Warning: Permanently added '[10.81.103.101]:2024' (RSA) to the list of known hosts.
+admin@10.81.103.101's password: 
+
+      Welcome to the bng CLI on pod100/bng
+      Copyright © 2016-2020, Cisco Systems, Inc.
+      All rights reserved.
+    
+User admin last logged in 2021-12-01T11:42:45.247257+00:00, to ops-center-bng-bng-ops-center-5666d4cb6-dj7sv, from 10.81.103.101 using cli-ssh
+admin connected from 10.81.103.101 using ssh on ops-center-bng-bng-ops-center-5666d4cb6-dj7sv
+[pod100/bng] bng# 
+```
+
+- Change to config mode in Ops Center
+
+```
+[pod100/bng] bng# config
+Entering configuration mode terminal
+[pod100/bng] bng(config)# 
+```
+
+- Apply following initial configuration. With changes to "endpoint radius" and "udp proxy" configs. Both "endpoint radius" and "udp-proxy" should use IP of cnBNG CP service network side protocol VIP or in case of AIO it should be the IP of AIO VM used for peering between cnBNG CP and UP.
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+cdl node-type session
+cdl logging default-log-level error
+cdl datastore session
+ slice-names [ 1 ]
+ endpoint replica 2
+ endpoint copies-per-node 2
+ endpoint settings slot-timeout-ms 750
+ index replica 2
+ index map 1
+ slot replica 2
+ slot map 4
+ slot notification limit           1200
+ slot notification max-concurrent-bulk-notifications 20
+exit
+cdl kafka replica 2
+etcd backup disable true
+instance instance-id 1
+ endpoint sm
+  replicas 3
+  nodes    2
+ exit
+ endpoint l2tp-tunnel
+  replicas 1
+  nodes    2
+ exit
+ endpoint nodemgr
+  replicas 1
+  nodes    2
+ exit
+ endpoint n4-protocol
+  replicas 1
+  nodes    2
+  retransmission timeout 0 max-retry 1
+ exit
+ endpoint dhcp
+  replicas 1
+  nodes    2
+ exit
+ endpoint pppoe
+  replicas 1
+  nodes    2
+ exit
+ endpoint radius
+  replicas 1
+  nodes    2
+!! Change this IP to svc-net1 related VIP (Proto VIP2)
+  <mark>vip-ip 11.0.0.1</mark>
+  interface coa-nas
+   sla response 25000
+   vip-ip <mark>11.0.0.1</mark> vip-port 3799
+  exit
+ exit
+ endpoint udp-proxy
+  replicas     1
+  nodes        2
+!! Change this IP to k8s-api-net related VIP (Proto VIP1)
+  internal-vip 212.212.212.102
+!! Change this IP to svc-net2 related VIP (Proto VIP3)
+  vip-ip 12.0.0.1
+  interface n4
+   sla response 25000
+  exit
+  interface gtpu
+   sla response 25000
+  exit
+ exit
+exit
+logging transaction duplicate disable
+logging level application error
+logging level transaction error
+logging level tracing error
+logging error stack disable
+logging name bng-dhcp0.bngfsol.collision
+logging name infra.application.core level application error
+logging name infra.config.core level application error
+logging name infra.config.core level transaction error
+logging name infra.dispatcher.core
+logging name infra.heap_dump.core level application error
+logging name infra.heap_dump.core level transaction error
+logging name infra.memory_cache.core level application error
+logging name infra.session_cache.core
+deployment
+ app-name     BNG
+!! Change below cluster-name to your cluster name
+ cluster-name <mark>Local</mark>
+ dc-name      DC
+exit
+k8 bng
+ etcd-endpoint      etcd:2379
+ datastore-endpoint datastore-ep-session:8882
+ tracing
+  enable
+  enable-trace-percent 30
+  append-messages      true
+  endpoint             jaeger-collector:9411
+ exit
+exit
+k8 label protocol-layer key smi.cisco.com/vm-type value protocol
+exit
+k8 label service-layer key smi.cisco.com/vm-type value service
+exit
+k8 label cdl-layer key smi.cisco.com/vm-type value session
+exit
+k8 label oam-layer key smi.cisco.com/vm-type value oam
+exit
+instances instance 1
+ system-id  DC
+ cluster-id Local
+ slice-name 1
+exit
+local-instance instance 1
+</code>
+</pre>
+</div>
+
+- Put system in running mode and commit the changes
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+[pod100/bng] bng(config)# <mark>system mode running </mark>   
+[pod100/bng] bng(config)# commit
+Commit complete.
+[pod100/bng] bng(config)# 
+Message from confd-api-manager at 2021-12-01 12:36:05...
+Helm update is STARTING.  Trigger for update is STARTUP. 
+[pod100/bng] bng(config)# 
+Message from confd-api-manager at 2021-12-01 12:36:08...
+Helm update is SUCCESS.  Trigger for update is STARTUP.
+</code>
+</pre>
+</div>
