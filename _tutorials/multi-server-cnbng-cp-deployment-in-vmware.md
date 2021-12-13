@@ -74,3 +74,171 @@ We have following UCS hosts to deploy cnBNG CP
     <td>service2, session2</td>
   </tr>
 </table>
+
+We need following networks on ESXi hosts. Create following networks in VMWare ESXi by creating Port Groups, vSwitch and mapping vSwitches to correspinding vNICs.
+
+
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th>Network</th>
+    <th>Port Group</th>
+    <th>vSwitch</th>
+    <th>vNIC</th>
+  </tr>
+  <tr>
+    <td>svc-net1</td>
+    <td>PCIE0_VLANx</td>
+    <td>vSwitch_PCIE0</td>
+    <td>vnic corresponding to PCIE0 port</td>
+  </tr>
+  <tr>
+    <td>svc-net1</td>
+    <td>PCIE1_VLANx</td>
+    <td>vSwitch_PCIE1</td>
+    <td>vnic corresponding to PCIE1 port</td>
+  </tr>
+  <tr>
+    <td>svc-net2</td>
+    <td>PCIE0_VLANy</td>
+    <td>vSwitch_PCIE0</td>
+    <td>vnic corresponding to PCIE0 port</td>
+  </tr>
+  <tr>
+    <td>svc-net2</td>
+    <td>PCIE1_VLANy</td>
+    <td>vSwitch_PCIE1</td>
+    <td>vnic corresponding to PCIE1 port</td>
+  </tr>
+  <tr>
+    <td>k8s-api-net</td>
+    <td>PCIE0_VLANz</td>
+    <td>vSwitch_PCIE0</td>
+    <td>vnic corresponding to PCIE0 port</td>
+  </tr>
+  <tr>
+    <td>k8s-api-net</td>
+    <td>PCIE1_VLANz</td>
+    <td>vSwitch_PCIE1</td>
+    <td>vnic corresponding to PCIE1 port</td>
+  </tr>
+  <tr>
+    <td>Management</td>
+    <td>VM Network</td>
+    <td>vSwitch_LOM</td>
+    <td>vnic corresponding to LOM for management</td>
+  </tr>
+</table>
+
+**Note**: VLANx, VLANy and VLANz could be based on the setup. In this tutorial we will be using z=312, y=311,x=310
+{: .notice--info}
+
+We will be deploying total of 16 VMs, since this setup is production quality this ensures proper Resiliency in the cluster and labelling of nodes to help place PODs for optimal performance. Below table list the NIC attachment for each VM type.
+
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th>VM Name/Type</th>
+    <th>NIC1</th>
+    <th>NIC2</th>
+    <th>NIC3</th>
+  </tr>
+  <tr>
+    <td>Inception/SMI Deployer</td>
+    <td>PCIE0_VLANz</td>
+    <td>VM Network</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>master1</td>
+    <td>PCIE0_VLANz</td>
+    <td>VM Network</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>master2</td>
+    <td>PCIE0_VLANz</td>
+    <td>VM Network</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>master3</td>
+    <td>PCIE0_VLANz</td>
+    <td>VM Network</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>etcd1</td>
+    <td>PCIE0_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>etcd2</td>
+    <td>PCIE0_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>etcd3</td>
+    <td>PCIE0_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>oam1</td>
+    <td>PCIE1_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>oam2</td>
+    <td>PCIE1_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>oam3</td>
+    <td>PCIE1_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>proto1</td>
+    <td>PCIE1_VLANz</td>
+    <td>PCIE1_VLANx</td>
+    <td>PCIE1_VLANy</td>
+  </tr>
+  <tr>
+    <td>proto2</td>
+    <td>PCIE1_VLANz</td>
+    <td>PCIE1_VLANx</td>
+    <td>PCIE1_VLANy</td>
+  </tr>
+  <tr>
+    <td>service1</td>
+    <td>PCIE0_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>service2</td>
+    <td>PCIE0_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>session1</td>
+    <td>PCIE0_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>session2</td>
+    <td>PCIE1_VLANz</td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+Let us now look at the IP addressing we will be using for this deployment. In this tutorial we will use one External Management network (10.81.103.0/24) and an Internal network (212.212.212.0/24) for k8s operations. We will also attach two service networks: 11.0.0.0/24 and 12.0.0.0/24. svc-net1 (11.0.0.0/24) will be used for cnBNG CP and UP communication whereas svc-net2 (12.0.0.0/24) will be used for cnBNG CP and Radius communication.
+
+
