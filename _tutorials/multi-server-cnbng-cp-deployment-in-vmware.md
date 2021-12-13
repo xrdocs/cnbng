@@ -29,6 +29,10 @@ We will deploy Multi server/node cnBNG CP in following steps:
 
 ![cnbng-cp-multi-server1.png]({{site.baseurl}}/images/cnbng-cp-multi-server1.png)
 
+## Physical Networking Topology
+
+![cnbng-multi-server2.png]({{site.baseurl}}/images/cnbng-multi-server2.png)
+
 ## Step-1: VMWare ESXi Networking Preparation
 
 We have following UCS hosts to deploy cnBNG CP
