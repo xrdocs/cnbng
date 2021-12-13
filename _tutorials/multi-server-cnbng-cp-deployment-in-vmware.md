@@ -239,6 +239,9 @@ We will be deploying total of 16 VMs, since this setup is production quality thi
   </tr>
 </table>
 
+**Note**: VLANx, VLANy and VLANz could be based on the setup. In this tutorial we will be using z=312, y=311,x=310
+{: .notice--info}
+
 Let us now look at the IP addressing we will be using for this deployment. In this tutorial we will use one External Management network (10.81.103.0/24) and an Internal network (212.212.212.0/24) for k8s operations. We will also attach two service networks: 11.0.0.0/24 and 12.0.0.0/24. svc-net1 (11.0.0.0/24) will be used for cnBNG CP and UP communication whereas svc-net2 (12.0.0.0/24) will be used for cnBNG CP and Radius communication.
 
 <table style="width:100%" border = "2">
