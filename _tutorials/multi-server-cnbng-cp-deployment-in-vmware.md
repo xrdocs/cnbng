@@ -384,5 +384,612 @@ We would also need Virtual IPs which will be used keepalived between similar nod
   </tr>
 </table>
 
+## Step 2: Inception Server Deployment
 
+Follow the steps detailed before on [Inception Server Deployment](https://xrdocs.io/cnbng/tutorials/inception-server-deployment-guide/). However attach two NICs to Inception Server VM , as per the NIC attachment plan described in Step-1.
+
+## Step 3: SSH Key Generation
+This is for security reasons, where cnBNG CP VM can only be accessed by ssh key and not through password by default.
+
+- SSH Login to Inception VM
+- Generate SSH key using:
+
+```
+ssh-keygen -t rsa
+```
+- Note down ssh keys in a file from .ssh/id_rsa (private) and ./ssh/id_rsa.pub (public)
+- Remove line breaks from private key and replace them with string "\n"
+- Remove line breaks from public key if there are any.
+
+## Step 4: cnBNG CP Cluster Configuration
+
+- Let us first define the VMWare environment
+```
+environments vmware
+ vcenter server         <<vcenter ip>>
+ vcenter allow-self-signed-cert true
+ vcenter user           <<your vcenter username>>
+ vcenter password       <<your password>>
+ vcenter datastore      <<server local datastore>>
+ vcenter cluster        cnBNG_SMI_CL01
+ vcenter datacenter     cnBNG_DC_01
+ vcenter host           <<your host name>>
+ vcenter nics "VM Network"
+ exit
+exit
+```
+
+- We will now define the software repos for cnBNG CP and CEE. cnBNG software is available as a tarball and it can be hosted on local http server for offline deployment. In this step we configure the software repository locations for tarball. We setup software cnf for both cnBNG CP and CEE. URL and SHA256 depends on the version of the image and the url location, so these two could change for your deployment.
+
+```
+software cnf bng
+  url             http://192.168.107.148/your/image/location/bng.2021.04.m0.i74.tar
+  sha256          e36b5ff86f35508539a8c8c8614ea227e67f97cf94830a8cee44fe0d2234dc1c
+  description     bng-products
+exit
+software cnf cee
+  url         http://192.168.107.148/your/image/location/cee-2020.02.6.i04.tar
+  sha256      b5040e9ad711ef743168bf382317a89e47138163765642c432eb5b80d7881f57
+  description cee-products
+exit
+```
+
+- Next we define Cluster configuration based on our deployment schemel. The configuration is self explanatory. However do note two kinds of VIPs define here for master.   
+
+```
+clusters cnbng-cp-cluster1
+ environment vmware
+ addons ingress bind-ip-address 10.81.103.101
+ addons ingress enabled
+ addons istio enabled
+ configuration master-virtual-ip        212.212.212.101
+ configuration master-virtual-ip-cidr   24
+ configuration master-virtual-ip-interface ens192
+ configuration additional-master-virtual-ip 10.81.103.101
+ configuration additional-master-virtual-ip-cidr 24
+ configuration additional-master-virtual-ip-interface ens224
+ configuration pod-subnet               192.212.0.0/16
+ configuration allow-insecure-registry  true
+ node-defaults initial-boot default-user username1
+ node-defaults initial-boot default-user-ssh-public-key "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDH4uQdrxTvgFg32szcxLUfwrxmI513ySoDkjznncofvkL/JV122JAsGHvL6T39jBRKytuPpLhvr9ZvwKlOZ5BeeUB+Zj8tuZdQRqIpvonhtcESc11oRM6w5dQjHUIaDdK/vBQQg5hSQ0CVzvVU2DS8E+csMbBoPzaUVi+qPjqfBEt9MzMysc1DnnXN1fFMDVzTAsb5mgt/cLjcfbo6qVgLt9irFJ/AfoQGltQi9M4vehsprYZngGL5U9+qt9qn4lbaxTt2HqNQJAuk701LVhZNXKCfHmgg6en3IYk7YZI1IhhAnYAqlQLuC7df9DqE6i0iB8eTuRh5I2KsPUrCLGv cloud-user@inception"
+ node-defaults initial-boot default-user-password password1
+ node-defaults k8s ssh-username username1
+ node-defaults k8s ssh-connection-private-key "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAwx+LkHa8U74BYN9rM3MS1H8K8ZiOdd8kqA5I8553KH75C/yV\nddtiQLBh7y+k9/YwUSsrbj6S4b6/Wb8CpTmeQXnlAfmY/LbmXUEaiKb6J4bXBEnN\ndaETOsOXUIx1CGg3Sv7wUEIOYUkNAlc71VNg0vBPnLDGwaD82lFYvqj46nwRLfTM\nzMrHNQ551zdXxTA1c0wLG+ZoLf3C43H26OqlYC7fYqxSfwH6EBpbUIvTOL3obKa2\nGZ4Bi+VPfqrfap+JW2sU7dh6jUCQLpO9NS1YWTVygnx5oIOnp9yGJO2GSNSIYQJ2\nAKpUC7gu3X/Q6hOotIgfHk7kYeSNirD1KwixrwIDAQABAoIBADKgQKne5MYlil4E\nGeBjfwM7Yy+EEZJrrysbabor52bOave9NVo67aczHHXeusLLUYX92WrlOV7xCtzS\nPnF4HaOHaO+2PwdyvRp9BdFm4YjX53npXDGk9URN8zim+MaRo6cFtnxcZza+qW1u\nDMwwsfKI/178TtV2W6SZbpkpZkwQJ/cN1fljxuQYubOujMZErc1Q7TlIQYrG8XVz\naOTVkYBU+O2DOKkWp4AM9qe/0RIdjmz1ZZHRB83iF3/OaU3j2mhlhRQwTiS3jcGX\nkWoovz/GmFAcw+VSz81tz2UFmGNczkl8F5t4afYq31M7r+restSd6Mc7dcqWA7pR\nYflz7SECgYEA+qleQDAxe9cSRyGk0aCXV7NKQnvmIReSiRxibNne2FTnLaBH7iM7\nGe8XT23gFLCvM1qmpaLxjQZEP4A7WTaZuTEQAvVHYM+4m+1XDz4+ePaSCFwru8Q/\nLvE0h45JGfuHiXIWQNsyycSnDa+50BQ1a+EruzsmdHDvVnhO/QK0gzsCgYEAx0dg\nVbOjGzEvuGTfTI8qqRYz2XQjSKr6IHqRGY/h2hVcJo0Is+fr9n2QlebJ9oIOVnw7\npSlPgnMNcI9b74aCGuVnVUW/23TRkTvq6goNBa2V++d9EHPNo2gahc1tuJZzkp8I\nnZONBHzU8jwe9nBbK7uuz9i8cgSnMaWbS6Q8PB0CgYEAoXzoWdYyqyQ+hFEqjFs3\n5ap+lyKXeo5jO65rwtECfsEERyLR9JwCAY1FqUiSawIBfcZTQrcdg8ubwIVutuU0\nWFlBhYZcPATXXK2lvw5M1UWVg4lOK6QdSLLhMsv6UKD6CxTTPWl66P6m2Wxy+5lp\naV0h/Xf4KGBx8XWE/f/2J+0CgYEAlfJGMZZut4pGLwhv4WqkngBf2VMDLa3Bcejn\n/4T9W5zQ7w0WLFDpg1quDa1P8JWh9j+ancc81Zp+1WB5u/zJLzXIkChgmeAHxLGC\nLMKNU+VuwtJHj7ajWD6AHogZ9Ff49K2HzRH2fRb1IKROY/7dC0Y43ppmCaEosTm8\nZalZzZ0CgYAF6KnlPw1qbpVZYyVcPw38omeisMs/92ovf4oqzJpZ5zCW1iKKRpQR\nq4oDLca0zJS/AUmXFTIG//VHvsna4A2JrmNS4rI+bEgwSDrRKHmX8Idctdu1ifgS\nrRtv1s5RfTZ67eWVYE6rUn1+EFBZwAzZorOXL3CzbjZEXUCJeOH6Lw==\n-----END RSA PRIVATE KEY-----"
+```
+
+- Define Common Netplan for all VMs. We will only define k8s-api-net here. Based on attachments we will add new networks.
+
+```
+network:
+    version: 2
+    ethernets:
+{% if master_vm is defined and master_vm == 'true' %}   
+        ens192:
+            addresses:
+            - {{K8S_SSH_IP}}/24
+            dhcp4: false
+            routes:
+            -   metric: 50
+                to: 0.0.0.0/0
+                via: 212.212.212.101                                        
+        ens224:
+            dhcp4: false
+            nameservers:
+                addresses:
+                - 64.102.6.247
+                search:
+                - cisco.com
+            gateway4: 10.81.103.1                                                     
+{% else %}
+        ens192:
+            addresses:
+            - {{K8S_SSH_IP}}/24
+            dhcp4: false           
+            routes:
+            -   metric: 50
+                to: 0.0.0.0/0
+                via: 212.212.212.101    
+{% endif %}
+```
+
+Replace line breaks by "\n". Netplan will look like this:
+```	
+"network:\n    version: 2\n    ethernets:\n{% if master_vm is defined and master_vm == 'true' %}   \n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false\n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101                                        \n        ens224:\n            dhcp4: false\n            nameservers:\n                addresses:\n                - 64.102.6.247\n                search:\n                - cisco.com\n            gateway4: 10.81.103.1                                                     \n{% else %}\n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false           \n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101    \n{% endif %}\n"
+```
+
+- Apply netplan configurations
+```
+node-defaults netplan template "network:\n    version: 2\n    ethernets:\n{% if master_vm is defined and master_vm == 'true' %}   \n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false\n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101                                        \n        ens224:\n            dhcp4: false\n            nameservers:\n                addresses:\n                - 64.102.6.247\n                search:\n                - cisco.com\n            gateway4: 10.81.103.1                                                     \n{% else %}\n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false           \n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101    \n{% endif %}\n"
+
+node-defaults netplan variable-definitions master_vm
+ default-value false
+exit
+```
+
+- Will now apply NTP configurations for the cluster. If the reachability to NTP server is not available in K8s-api-net, then Inception Deployer can double up as the NTP server for the cluster VM nodes. In this tutorial we will use Inception Deployer as the NTP server
+```
+node-defaults os ntp enabled
+node-defaults os ntp servers 212.212.212.100
+exit
+```
+- Apply the master nodes configuration based on dimensioning and IP address scheme
+```	
+nodes master1
+  k8s node-type master
+  k8s ssh-ip 212.212.212.11
+  vmware datastore datastore01
+  vmware host 10.81.103.64
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 16384
+  vmware sizing cpus 4
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  vmware nics "VM Network"
+  exit
+  netplan variables master_vm
+   value true
+  exit
+  os netplan-additions ethernets ens224
+   addresses [ 10.81.103.102/24 ]
+  exit
+  os ntp enabled
+ exit
+ nodes master2
+  k8s node-type master
+  k8s ssh-ip 212.212.212.12
+  vmware datastore datastore02
+  vmware host 10.81.103.65
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 16384
+  vmware sizing cpus 4
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  vmware nics "VM Network"
+  exit
+  netplan variables master_vm
+   value true
+  exit
+  os netplan-additions ethernets ens224
+   addresses [ 10.81.103.103/24 ]
+  exit
+  os ntp enabled
+ exit
+ nodes master3
+  k8s node-type master
+  k8s ssh-ip 212.212.212.13
+  vmware datastore datastore03
+  vmware host 10.81.103.66
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 16384
+  vmware sizing cpus 4
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  vmware nics "VM Network"
+  exit
+  netplan variables master_vm
+   value true
+  exit
+  os netplan-additions ethernets ens224
+   addresses [ 10.81.103.104/24 ]
+  exit
+  os ntp enabled
+ exit
+```
+- Let's now add ETCD node configurations
+```
+ nodes etcd1
+  k8s node-type etcd
+  k8s ssh-ip 212.212.212.14
+  vmware datastore datastore01
+  vmware host 10.81.103.64
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 16384
+  vmware sizing cpus 4
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  os ntp enabled
+ exit
+ nodes etcd2
+  k8s node-type etcd
+  k8s ssh-ip 212.212.212.15
+  vmware datastore datastore02
+  vmware host 10.81.103.65
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 16384
+  vmware sizing cpus 4
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  os ntp enabled
+ exit
+ nodes etcd3
+  k8s node-type etcd
+  k8s ssh-ip 212.212.212.16
+  vmware datastore datastore03
+  vmware host 10.81.103.66
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 16384
+  vmware sizing cpus 4
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  os ntp enabled
+ exit
+```
+- Following is configuration for OAM nodes
+```
+ nodes oam1
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.17
+  k8s node-labels smi.cisco.com/node-type oam
+  exit
+  k8s node-labels smi.cisco.com/vm-type oam
+  exit
+  vmware datastore datastore01
+  vmware host 10.81.103.64
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 114688
+  vmware sizing cpus 12
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 200
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 1
+  exit
+  vmware nics PCIE1-VLAN312
+  exit
+  os ntp enabled
+ exit
+ nodes oam2
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.18
+  k8s node-labels smi.cisco.com/node-type oam
+  exit
+  k8s node-labels smi.cisco.com/vm-type oam
+  exit
+  vmware datastore datastore02
+  vmware host 10.81.103.65
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 114688
+  vmware sizing cpus 12
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 200
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 1
+  exit
+  vmware nics PCIE1-VLAN312
+  exit
+  os ntp enabled
+ exit
+ nodes oam3
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.19
+  k8s node-labels smi.cisco.com/node-type oam
+  exit
+  k8s node-labels smi.cisco.com/vm-type oam
+  exit
+  vmware datastore datastore03
+  vmware host 10.81.103.66
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 114688
+  vmware sizing cpus 12
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 200
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 1
+  exit
+  vmware nics PCIE1-VLAN312
+  exit
+  os ntp enabled
+ exit
+```
+- Apply below protocol nodes configurations
+```
+nodes proto1
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.20
+  k8s node-labels disktype ssd
+  exit
+  k8s node-labels smi.cisco.com/node-type protocol
+  exit
+  k8s node-labels smi.cisco.com/vm-type protocol
+  exit
+  vmware datastore datastore141
+  vmware host 10.81.103.141
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 143360
+  vmware sizing cpus 18
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 1
+  exit
+  vmware nics PCIE1-VLAN312
+  exit
+  vmware nics PCIE1-VLAN310
+  exit
+  vmware nics PCIE1-VLAN311
+  exit
+  os netplan-additions ethernets ens224
+   addresses [ 11.0.0.2/24 ]
+  exit
+  os netplan-additions ethernets ens256
+   addresses [ 12.0.0.2/24 ]
+  exit
+  os ntp enabled
+ exit
+ nodes proto2
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.21
+  k8s node-labels disktype ssd
+  exit
+  k8s node-labels smi.cisco.com/node-type protocol
+  exit
+  k8s node-labels smi.cisco.com/vm-type protocol
+  exit
+  vmware datastore datastore68
+  vmware host 10.81.103.68
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 143360
+  vmware sizing cpus 18
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 1
+  exit
+  vmware nics PCIE1-VLAN312
+  exit
+  vmware nics PCIE1-VLAN310
+  exit
+  vmware nics PCIE1-VLAN311
+  exit
+  os netplan-additions ethernets ens224
+   addresses [ 11.0.0.3/24 ]
+  exit
+  os netplan-additions ethernets ens256
+   addresses [ 12.0.0.3/24 ]
+  exit
+  os ntp enabled
+ exit
+```
+- Add below Service and Session node configurations
+```
+ nodes service1
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.22
+  k8s node-labels smi.cisco.com/node-type service
+  exit
+  k8s node-labels smi.cisco.com/vm-type service
+  exit
+  vmware datastore datastore141
+  vmware host 10.81.103.141
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 143360
+  vmware sizing cpus 18
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  os ntp enabled
+ exit
+ nodes service2
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.23
+  k8s node-labels smi.cisco.com/node-type service
+  exit
+  k8s node-labels smi.cisco.com/vm-type service
+  exit
+  vmware datastore datastore1
+  vmware host 10.81.103.63
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 143360
+  vmware sizing cpus 18
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  os ntp enabled
+ exit
+ nodes session1
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.24
+  k8s node-labels smi.cisco.com/node-type session
+  exit
+  k8s node-labels smi.cisco.com/vm-type session
+  exit
+  vmware datastore datastore68
+  vmware host 10.81.103.68
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 143360
+  vmware sizing cpus 18
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 0
+  exit
+  vmware nics PCIE0-VLAN312
+  exit
+  os ntp enabled
+ exit
+ nodes session2
+  k8s node-type worker
+  k8s ssh-ip 212.212.212.25
+  k8s node-labels smi.cisco.com/node-type session
+  exit
+  k8s node-labels smi.cisco.com/vm-type session
+  exit
+  vmware datastore datastore1
+  vmware host 10.81.103.63
+  vmware performance memory-reservation true
+  vmware performance cpu-reservation true
+  vmware sizing ram-mb 143360
+  vmware sizing cpus 18
+  vmware sizing cores-equal-cpus true
+  vmware sizing disk-root-gb 100
+  vmware sizing disk-data-gb 100
+  vmware sizing disk-home-gb 50
+  vmware numa-node-affinity 1
+  exit
+  vmware nics PCIE1-VLAN312
+  exit
+  os ntp enabled
+ exit
+```
+- We now need to define the virtual IPs. 
+```
+virtual-ips udpvip
+  check-ports    [ 28000 ]
+  vrrp-interface ens192
+  vrrp-router-id 222
+  check-interface ens192
+  exit
+  check-interface ens224
+  exit
+  check-interface ens256
+  exit
+  ipv4-addresses 212.212.212.102
+   mask      24
+   broadcast 212.212.212.255
+   device    ens192
+  exit
+  ipv4-addresses 11.0.0.1
+   mask      24
+   broadcast 11.0.0.255
+   device    ens224
+  exit
+  ipv4-addresses 12.0.0.1
+   mask      24
+   broadcast 12.0.0.255
+   device    ens256
+  exit
+  hosts proto1
+   priority 100
+  exit
+  hosts proto2
+   priority 100
+  exit
+ exit 
+```
+- Let's define ops-center config
+```
+clusters cnbng-cp-cluster1
+ ops-centers bng bng
+  repository-local        bng
+  sync-default-repository true
+  netconf-ip              10.81.103.101
+  netconf-port            2022
+  ssh-ip                  10.81.103.101
+  ssh-port                2024
+  ingress-hostname        10.81.103.101.nip.io
+  initial-boot-parameters use-volume-claims true
+  initial-boot-parameters first-boot-password password1
+  initial-boot-parameters auto-deploy false
+  initial-boot-parameters single-node true
+ exit
+ ops-centers cee global
+  repository-local        cee
+  sync-default-repository true
+  netconf-ip              10.81.103.101
+  netconf-port            3024
+  ssh-ip                  10.81.103.101
+  ssh-port                3023
+  ingress-hostname        10.81.103.101.nip.io
+  initial-boot-parameters use-volume-claims true
+  initial-boot-parameters first-boot-password password1
+  initial-boot-parameters auto-deploy true
+  initial-boot-parameters single-node true
+ exit
+exit
+```
+
+## Step 5: cnBNG CP Dpeloyment
+
+- After committing configuration which we build in Step-4 on SMI Deployer. We can start the cluster sync.
+```
+[inception] SMI Cluster Deployer# clusters cnbng-cp-cluster1 actions sync run   
+This will run sync.  Are you sure? [no,yes] yes
+message accepted
+[inception] SMI Cluster Deployer# 
+```
+- Monitor sync using below command. It will take about 90mins to sync and deploy the cluster. 
+```
+monitor sync-logs cnbng-cp-cluster1
+
+E.g.
+
+[inception] SMI Cluster Deployer# monitor sync-logs cnbng-cp-cluster1
+. . .
+. . .
+
+Thursday 18 November 2021  14:38:49 +0000 (0:00:00.064)       0:08:42.748 ***** 
+=============================================================================== 
+2021-11-18 14:38:49.716 DEBUG cluster_sync.cnbng-cp-cluster1: Cluster sync successful 
+2021-11-18 14:38:49.717 DEBUG cluster_sync.cnbng-cp-cluster1: Ansible sync done 
+2021-11-18 14:38:49.717 INFO cluster_sync.cnbng-cp-cluster1: _sync finished.  Opening lock 
+```
+
+## Verifications
+
+After the cluster is deployed it can be verified using below commands
 
