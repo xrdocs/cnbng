@@ -463,7 +463,9 @@ clusters cnbng-cp-cluster1
 
 - Define Common Netplan for all VMs. We will only define k8s-api-net here. Based on attachments we will add new networks.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 network:
     version: 2
     ethernets:
@@ -494,7 +496,9 @@ network:
                 to: 0.0.0.0/0
                 via: 212.212.212.101    
 {% endif %}
-```
+</code>
+</pre>
+</div>
 
 Replace line breaks by "\n". Netplan will look like this:
 
