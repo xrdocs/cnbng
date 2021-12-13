@@ -469,7 +469,7 @@ network:
 { % if master_vm is defined and master_vm == 'true' %}   
         ens192:
             addresses:
-            - { {K8S_SSH_IP} }/24
+            - { {K8S_SSH_IP}}/24
             dhcp4: false
             routes:
             -   metric: 50
@@ -482,7 +482,7 @@ network:
                 - 64.102.6.247
                 search:
                 - cisco.com
-            gateway4: 10.81.103.1                                                     
+            gateway4: 10.81.103.1   !! This is gateway IP for management                                             
 { % else %}
         ens192:
             addresses:
@@ -494,3 +494,9 @@ network:
                 via: 212.212.212.101    
 { % endif %}
 ```
+Replace line breaks by "\n". Netplan will look like this:
+
+```	
+"network:\n    version: 2\n    ethernets:\n{% if master_vm is defined and master_vm == 'true' %}   \n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false\n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101                                        \n        ens224:\n            dhcp4: false\n            nameservers:\n                addresses:\n                - 64.102.6.247\n                search:\n                - cisco.com\n            gateway4: 10.81.103.1                                                     \n{% else %}\n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false           \n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101    \n{% endif %}\n"
+```
+
