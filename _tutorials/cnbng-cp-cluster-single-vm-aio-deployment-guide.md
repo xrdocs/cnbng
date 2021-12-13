@@ -115,7 +115,7 @@ exit
         ens192:
             dhcp4: false
             addresses:
-            - {{K8S_SSH_IP}}/24
+            - \{\{K8S_SSH_IP\}\}/24
             routes:
             - to: 0.0.0.0/0
               via: <mark>your-gateway-ip</mark>
