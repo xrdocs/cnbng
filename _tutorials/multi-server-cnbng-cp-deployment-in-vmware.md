@@ -442,6 +442,7 @@ exit
 clusters cnbng-cp-cluster1
  environment vmware
  addons ingress bind-ip-address 10.81.103.101
+ addons ingress bind-ip-address-internal 212.212.212.101
  addons ingress enabled
  addons istio enabled
  configuration master-virtual-ip        212.212.212.101
@@ -450,6 +451,7 @@ clusters cnbng-cp-cluster1
  configuration additional-master-virtual-ip 10.81.103.101
  configuration additional-master-virtual-ip-cidr 24
  configuration additional-master-virtual-ip-interface ens224
+ configuration virtual-ip-vrrp-router-id 60
  configuration pod-subnet               192.212.0.0/16
  configuration allow-insecure-registry  true
  node-defaults initial-boot default-user username1
