@@ -397,6 +397,7 @@ This is for security reasons, where cnBNG CP VM can only be accessed by ssh key 
 ```
 ssh-keygen -t rsa
 ```
+
 - Note down ssh keys in a file from .ssh/id_rsa (private) and ./ssh/id_rsa.pub (public)
 - Remove line breaks from private key and replace them with string "\n"
 - Remove line breaks from public key if there are any.
@@ -404,6 +405,7 @@ ssh-keygen -t rsa
 ## Step 4: cnBNG CP Cluster Configuration
 
 - Let us first define the VMWare environment
+
 ```
 environments vmware
  vcenter server         <<vcenter ip>>
@@ -493,11 +495,13 @@ network:
 ```
 
 Replace line breaks by "\n". Netplan will look like this:
+
 ```	
 "network:\n    version: 2\n    ethernets:\n{% if master_vm is defined and master_vm == 'true' %}   \n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false\n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101                                        \n        ens224:\n            dhcp4: false\n            nameservers:\n                addresses:\n                - 64.102.6.247\n                search:\n                - cisco.com\n            gateway4: 10.81.103.1                                                     \n{% else %}\n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false           \n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101    \n{% endif %}\n"
 ```
 
 - Apply netplan configurations
+
 ```
 node-defaults netplan template "network:\n    version: 2\n    ethernets:\n{% if master_vm is defined and master_vm == 'true' %}   \n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false\n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101                                        \n        ens224:\n            dhcp4: false\n            nameservers:\n                addresses:\n                - 64.102.6.247\n                search:\n                - cisco.com\n            gateway4: 10.81.103.1                                                     \n{% else %}\n        ens192:\n            addresses:\n            - {{K8S_SSH_IP}}/24\n            dhcp4: false           \n            routes:\n            -   metric: 50\n                to: 0.0.0.0/0\n                via: 212.212.212.101    \n{% endif %}\n"
 
@@ -507,12 +511,15 @@ exit
 ```
 
 - Will now apply NTP configurations for the cluster. If the reachability to NTP server is not available in K8s-api-net, then Inception Deployer can double up as the NTP server for the cluster VM nodes. In this tutorial we will use Inception Deployer as the NTP server
+
 ```
 node-defaults os ntp enabled
 node-defaults os ntp servers 212.212.212.100
 exit
 ```
+
 - Apply the master nodes configuration based on dimensioning and IP address scheme
+
 ```	
 nodes master1
   k8s node-type master
@@ -596,7 +603,9 @@ nodes master1
   os ntp enabled
  exit
 ```
+
 - Let's now add ETCD node configurations
+
 ```
  nodes etcd1
   k8s node-type etcd
@@ -656,7 +665,9 @@ nodes master1
   os ntp enabled
  exit
 ```
+
 - Following is configuration for OAM nodes
+
 ```
  nodes oam1
   k8s node-type worker
@@ -728,7 +739,9 @@ nodes master1
   os ntp enabled
  exit
 ```
+
 - Apply below protocol nodes configurations
+
 ```
 nodes proto1
   k8s node-type worker
@@ -801,7 +814,9 @@ nodes proto1
   os ntp enabled
  exit
 ```
+
 - Add below Service and Session node configurations
+
 ```
  nodes service1
   k8s node-type worker
@@ -896,7 +911,9 @@ nodes proto1
   os ntp enabled
  exit
 ```
+
 - We now need to define the virtual IPs. 
+
 ```
 virtual-ips udpvip
   check-ports    [ 28000 ]
@@ -931,7 +948,9 @@ virtual-ips udpvip
   exit
  exit 
 ```
+
 - Let's define ops-center config
+
 ```
 clusters cnbng-cp-cluster1
  ops-centers bng bng
@@ -966,6 +985,7 @@ exit
 ## Step 5: cnBNG CP Dpeloyment
 
 - After committing configuration which we build in Step-4 on SMI Deployer. We can start the cluster sync.
+
 ```
 [inception] SMI Cluster Deployer# clusters cnbng-cp-cluster1 actions sync run   
 This will run sync.  Are you sure? [no,yes] yes
@@ -973,6 +993,7 @@ message accepted
 [inception] SMI Cluster Deployer# 
 ```
 - Monitor sync using below command. It will take about 90mins to sync and deploy the cluster. 
+
 ```
 monitor sync-logs cnbng-cp-cluster1
 
