@@ -241,4 +241,145 @@ We will be deploying total of 16 VMs, since this setup is production quality thi
 
 Let us now look at the IP addressing we will be using for this deployment. In this tutorial we will use one External Management network (10.81.103.0/24) and an Internal network (212.212.212.0/24) for k8s operations. We will also attach two service networks: 11.0.0.0/24 and 12.0.0.0/24. svc-net1 (11.0.0.0/24) will be used for cnBNG CP and UP communication whereas svc-net2 (12.0.0.0/24) will be used for cnBNG CP and Radius communication.
 
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th>VM Name/Type</th>
+    <th>NIC1 IP</th>
+    <th>NIC2 IP</th>
+    <th>NIC3 IP</th>
+  </tr>
+  <tr>
+    <td>Inception/SMI Deployer</td>
+    <td>212.212.212.100</td>
+    <td>10.81.103.100</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>master1</td>
+    <td>212.212.212.11</td>
+    <td>10.81.103.102</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>master2</td>
+    <td>212.212.212.12</td>
+    <td>10.81.103.103</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>master3</td>
+    <td>212.212.212.13</td>
+    <td>10.81.103.104</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>etcd1</td>
+    <td>212.212.212.14</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>etcd2</td>
+    <td>212.212.212.15</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>etcd3</td>
+    <td>212.212.212.16</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>oam1</td>
+    <td>212.212.212.17</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>oam2</td>
+    <td>212.212.212.18</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>oam3</td>
+    <td>212.212.212.19</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>proto1</td>
+    <td>212.212.212.20</td>
+    <td>11.0.0.2</td>
+    <td>12.0.0.2</td>
+  </tr>
+  <tr>
+    <td>proto2</td>
+    <td>212.212.212.21</td>
+    <td>11.0.0.3</td>
+    <td>12.0.0.3</td>
+  </tr>
+  <tr>
+    <td>service1</td>
+    <td>212.212.212.22</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>service2</td>
+    <td>212.212.212.23</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>session1</td>
+    <td>212.212.212.24</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>session2</td>
+    <td>212.212.212.25</td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+We would also need Virtual IPs which will be used keepalived between similar nodes to provide HA:
+
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th>VIP Type/Type</th>
+    <th>IP Address</th>
+    <th>Remarks</th>
+  </tr>
+  <tr>
+    <td>Master VIP1</td>
+    <td>10.81.103.101</td>
+    <td>For management access</td>
+  </tr>
+  <tr>
+    <td>Master VIP2</td>
+    <td>212.212.212.101</td>
+    <td>k8s-api-net access</td>
+  </tr>
+  <tr>
+    <td>Proto VIP1</td>
+    <td>212.212.212.102</td>
+    <td>k8s-api-net access</td>
+  </tr>
+  <tr>
+    <td>Proto VIP2</td>
+    <td>11.0.0.1</td>
+    <td>svc-net-1 VIP, will be used for peering with cnBNG UP</td>
+  </tr>
+ <tr>
+    <td>Proto VIP3</td>
+    <td>12.0.0.1</td>
+    <td>svc-net-2 VIP, will be used for Radius communication</td>
+  </tr>
+</table>
+
+
 
