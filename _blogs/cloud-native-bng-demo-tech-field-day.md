@@ -1,11 +1,17 @@
 ---
 published: true
 date: '2021-12-14 10:43 +0530'
-title: Cloud Native BNG Demo @Tech Field Day
+title: Cloud Native BNG @Tech Field Day
 position: hidden
 ---
+## Cloud Native BNG @Tech Field Day
+
+Watch this session to learn how subscriber services are evolving and what leaps Cisco is taking to lead this shift.
+
+[Click here to watch this session on Youtube!](https://youtu.be/frBtjQawUB0)
+
 ## Tech Field Day Demo of cnBNG
 
-Watch Cloud Native BNG in action at Tech Field Day demo.
+Watch Cloud Native BNG in action thorough this Demo. Understand the salient points of the solution, including how Cisco is trying to simplify the deployments and operations thorough this new architecture.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yT9d51SofjQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[Click here to watch this session on Youtube!](https://www.youtube.com/embed/yT9d51SofjQ)
