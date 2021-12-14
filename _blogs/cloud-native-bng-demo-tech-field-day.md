@@ -2,7 +2,6 @@
 published: true
 date: '2021-12-14 10:43 +0530'
 title: Cloud Native BNG Demo @Tech Field Day
-author: Gurpreet Dhaliwal
 position: hidden
 ---
 ## Tech Field Day Demo of cnBNG
