@@ -1288,4 +1288,4 @@ Helm update is SUCCESS.  Trigger for update is STARTUP.
 </pre>
 </div>
 
-**Credits:** Configuration is provided from SVI setup by Sreepada Rao
+***Credits***: Special thanks to Sreepada Rao for providing configurations and great insights. 
