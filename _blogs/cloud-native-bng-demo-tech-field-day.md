@@ -4,11 +4,14 @@ date: '2021-12-14 10:43 +0530'
 title: Cloud Native BNG @Tech Field Day
 position: top
 tags:
+  - cisco
   - cnbng
   - bng
   - cloud native bng
-  - cisco
   - broadband network gateway
+excerpt: >-
+  Learn cnBNG solution and watch cnBNG in action through a demo in these Tech
+  Field Day sessions.
 ---
 ## Cloud Native BNG @Tech Field Day
 
