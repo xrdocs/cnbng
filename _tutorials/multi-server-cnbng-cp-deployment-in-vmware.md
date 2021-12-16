@@ -15,6 +15,7 @@ excerpt: >-
   using multi server or VM nodes in VMWare ESXi environment, basic concepts
   related to networking etc.
 ---
+
 {% include toc %}
 
 In this tutorial we will learn how to deploy high capacity cnBNG CP in multi server VMWare ESXi environment. The deployment of cnBNG CP is fully automated through Inception Deployer or Cluster Manager. 
