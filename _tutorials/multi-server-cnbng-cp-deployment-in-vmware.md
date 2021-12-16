@@ -3,7 +3,13 @@ published: true
 date: '2021-12-13 08:39 +0530'
 title: Multi-server cnBNG CP Deployment in VMWare
 author: Gurpreet Dhaliwal
-position: hidden
+position: top
+tags:
+  - cnbng
+  - cloud native bng
+  - broadband network gateway
+  - bng
+  - cisco
 ---
 {% include toc %}
 
@@ -1290,4 +1296,4 @@ Helm update is SUCCESS.  Trigger for update is STARTUP.
 
 
 
-***Credits***: Special thanks to Sripada Rao for providing configurations from SVI. 
+***Credits***: Special thanks to Sripada Rao for providing configurations from SVI.
