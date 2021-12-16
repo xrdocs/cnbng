@@ -5,11 +5,17 @@ title: cnBNG CP Cluster Single VM (AIO) Deployment Guide
 author: Gurpreet Dhaliwal
 position: top
 tags:
+  - cisco
   - cnbng
   - cloud native bng
-  - cisco
   - broadband network gateway
   - bng
+excerpt: >-
+  cnBNG Control Plane can be deployed in Single VM. This single VM deployment of
+  cnBNG is called as All-in-one (AIO) deployment. AIO deployment includes
+  ops-center, telemetry, grafana with full cloud native stack from SMI and cnBNG
+  control plane application software. In this tutorial lean how to deploy cnBNG
+  CP in Single VM.
 ---
 ## Introduction
 AIO VMware Deployment means All-In-One deployment of cnBNG Control Plane in VMWare ESXi environment. This is a single VM deployment for cnBNG Control Plane in VMWare environment which deploys following in a single customized base Ubuntu VM:
