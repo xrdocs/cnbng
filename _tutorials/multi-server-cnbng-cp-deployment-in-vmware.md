@@ -11,9 +11,9 @@ tags:
   - broadband network gateway
   - bng
 excerpt: >-
-  Learn how to deploy cnBNG CP in a full fledged production environment. You
-  will learn how to bring-up cnBNG CP using multi server or VM nodes in VMWare
-  ESXi environment, basic concepts related to networking etc.
+  Learn how to deploy cnBNG CP HA setup. You will learn how to bring-up cnBNG CP
+  using multi server or VM nodes in VMWare ESXi environment, basic concepts
+  related to networking etc.
 ---
 {% include toc %}
 
