@@ -2,7 +2,13 @@
 published: true
 date: '2021-12-14 10:43 +0530'
 title: Cloud Native BNG @Tech Field Day
-position: hidden
+position: top
+tags:
+  - cnbng
+  - bng
+  - cloud native bng
+  - cisco
+  - broadband network gateway
 ---
 ## Cloud Native BNG @Tech Field Day
 
