@@ -4,6 +4,12 @@ date: '2021-12-06 18:19 +0530'
 title: cnBNG CP Cluster Single VM (AIO) Deployment Guide
 author: Gurpreet Dhaliwal
 position: top
+tags:
+  - cnbng
+  - cloud native bng
+  - cisco
+  - broadband network gateway
+  - bng
 ---
 ## Introduction
 AIO VMware Deployment means All-In-One deployment of cnBNG Control Plane in VMWare ESXi environment. This is a single VM deployment for cnBNG Control Plane in VMWare environment which deploys following in a single customized base Ubuntu VM:
