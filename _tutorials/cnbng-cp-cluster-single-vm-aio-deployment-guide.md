@@ -129,7 +129,7 @@ exit
         ens192:
             dhcp4: false
             addresses:
-            - \{\{K8S_SSH_IP\}\}/24
+            - { {K8S_SSH_IP}}/24
             routes:
             - to: 0.0.0.0/0
               via: <mark>your-gateway-ip</mark>
@@ -146,7 +146,7 @@ exit
 - Replace line breaks by "\n". Netplan will look like this:
 
 ```
- "\n     network:\n        version: 2\n        ethernets:\n            ens192:\n                dhcp4: false\n                addresses:\n                - {{K8S_SSH_IP}}/24\n                routes:\n                - to: 0.0.0.0/0\n                  via: your-gateway-ip\n                nameservers:\n                    addresses:\n                    - your-dns1\n                    - your-dns2\n                    search:\n                    - your-domain\n\n\n"
+ "\n     network:\n        version: 2\n        ethernets:\n            ens192:\n                dhcp4: false\n                addresses:\n                - { {K8S_SSH_IP}}/24\n                routes:\n                - to: 0.0.0.0/0\n                  via: your-gateway-ip\n                nameservers:\n                    addresses:\n                    - your-dns1\n                    - your-dns2\n                    search:\n                    - your-domain\n\n\n"
 ```
 
 - Create Cluster configs with SSH public and private keys copied in Step-2 and netplan from previous step:
