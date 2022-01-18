@@ -42,7 +42,11 @@ We will deploy Multi server/node cnBNG CP in following steps:
 
 ## Physical Networking Topology
 
+<!---
 ![cnbng-multi-server2.png]({{site.baseurl}}/images/cnbng-multi-server2.png)
+-->
+
+![multi-server-physical-nw.png]({{site.baseurl}}/images/multi-server-physical-nw.png)
 
 ## Step-1: VMWare ESXi Networking Preparation
 
