@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 date: '2022-01-20 15:48 +0530'
 title: cnBNG CP Multiserver (Baremetal) Deployment Guide
 author: Gurpreet Dhaliwal
@@ -8,6 +8,7 @@ excerpt: >-
   deployment is also called as CNDP deployment, it allows cnBNG CP to be
   deployed without need of running hypervisor. CNDP deployment offers 20%
   performance improvement over traditional hypervisor/VM based deployment.
+position: hidden
 ---
 
 {% include toc %}
@@ -15,10 +16,10 @@ excerpt: >-
 In this tutorial we will learn how to deploy high capacity cnBNG CP on baremetal UCS Servers. Deployment of cnBNG CP on Baremetal Server is also known as CNDP (Cloud Native Development Platform) Deployment. The deployment of cnBNG CP is fully automated through Inception Deployer or Cluster Manager. 
 
 We will deploy Multi server cnBNG CP in following steps:
-	- CNDP Preparation
-	- SSH Key Generation
-	- cnBNG CP Cluster Configuration
-	- cnBNG CP Deployment
+	1. CNDP Preparation
+	1. SSH Key Generation
+	1. cnBNG CP Cluster Configuration
+	1. cnBNG CP Deployment
 
 ## Logical Deployment Topology
 
@@ -28,7 +29,43 @@ We will deploy Multi server cnBNG CP in following steps:
 
 ![cndp-physical.png]({{site.baseurl}}/images/cndp-physical.png)
 
+## Prerequisites:
 
+SMI Deployer Should be Preinstalled: We can either use Inception itself as SMI Deployer or deploy a separate cluster manager using Inception. Refer to Inception Server deployment guide or Cluster Manager Deployment Guide in tutorials.
+
+***Note***: SMI Deployer requires access to CIMC for CNDP Cluster Deployment
+{: .notice--info}
+
+## Step 1: CNDP Preparation
+
+
+## Step 4: cnBNG CP Dpeloyment
+
+- After committing configuration which we build in Step-4 on SMI Deployer. We can start the cluster sync.
+
+```
+[inception] SMI Cluster Deployer# clusters cnbng-cp-cluster1 actions sync run   
+This will run sync.  Are you sure? [no,yes] yes
+message accepted
+[inception] SMI Cluster Deployer# 
+```
+- Monitor sync using below command. It will take about 90mins to sync and deploy the cluster. 
+
+```
+monitor sync-logs cnbng-cp-cluster1
+
+E.g.
+
+[inception] SMI Cluster Deployer# monitor sync-logs cnbng-cp-cluster1
+. . .
+. . .
+
+Thursday 18 November 2021  14:38:49 +0000 (0:00:00.064)       0:08:42.748 ***** 
+=============================================================================== 
+2021-11-18 14:38:49.716 DEBUG cluster_sync.cnbng-cp-cluster1: Cluster sync successful 
+2021-11-18 14:38:49.717 DEBUG cluster_sync.cnbng-cp-cluster1: Ansible sync done 
+2021-11-18 14:38:49.717 INFO cluster_sync.cnbng-cp-cluster1: _sync finished.  Opening lock 
+```
 
 ## Verifications
 
