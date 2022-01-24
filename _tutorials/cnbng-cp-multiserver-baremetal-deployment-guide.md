@@ -330,8 +330,8 @@ node-defaults ucs-server cimc user admin
  node-defaults ucs-server cimc remote-management sol ssh-port 2400
  node-defaults ucs-server cimc networking ntp enabled
  node-defaults ucs-server cimc networking ntp servers 72.163.32.44
- exit
- ```
+exit
+```
  
  - We now define NTP and node defaults
  
@@ -588,12 +588,38 @@ kubectl get pods -A
 
 ```
 kubectl get nodes
+
+e.g.
+cisco@cnbng-cp-cluster1-server-1:~$ kubectl get nodes
+NAME                          STATUS   ROLES                  AGE   VERSION
+svi-cnbng-cndp-tb1-server-1   Ready    control-plane,master   11d   v1.21.0
+svi-cnbng-cndp-tb1-server-2   Ready    control-plane,master   11d   v1.21.0
+svi-cnbng-cndp-tb1-server-3   Ready    control-plane,master   11d   v1.21.0
+svi-cnbng-cndp-tb1-server-4   Ready    <none>                 11d   v1.21.0
 ```
 
 - We can connect to Grafana at the grafana ingress
 
 ```
 kubectl get ingress -A
+
+e.g.
+cisco@cnbng-cp-cluster1-server-1:~$ kubectl get ingress -A
+NAMESPACE     NAME                                       CLASS    HOSTS                                                       ADDRESS                                        PORTS     AGE
+bng-bng       cli-ingress-bng-bng-ops-center             <none>   cli.bng-bng-ops-center.10.81.103.82.nip.io                  201.201.201.11,201.201.201.12,201.201.201.13   80, 443   3d21h
+bng-bng       documentation-ingress                      <none>   documentation.bng-bng-ops-center.10.81.103.82.nip.io        201.201.201.11,201.201.201.12,201.201.201.13   80, 443   3d21h
+bng-bng       oam-files-ingress-bng-bng-oam-pod          <none>   oam-files.bng-bng-oam-pod.10.81.103.82.nip.io               201.201.201.11,201.201.201.12,201.201.201.13   80, 443   2d23h
+bng-bng       restconf-ingress-bng-bng-ops-center        <none>   restconf.bng-bng-ops-center.10.81.103.82.nip.io             201.201.201.11,201.201.201.12,201.201.201.13   80, 443   3d21h
+cee-global    cee-global-product-documentation-ingress   <none>   docs.cee-global-product-documentation.10.81.103.82.nip.io   201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+cee-global    cli-ingress-cee-global-ops-center          <none>   cli.cee-global-ops-center.10.81.103.82.nip.io               201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+cee-global    documentation-ingress                      <none>   documentation.cee-global-ops-center.10.81.103.82.nip.io     201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+cee-global    grafana-ingress                            <none>   grafana.10.81.103.82.nip.io                                 201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+cee-global    prometheus-hi-res                          <none>   prometheus-hi-res.10.81.103.82.nip.io                       201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+cee-global    restconf-ingress-cee-global-ops-center     <none>   restconf.cee-global-ops-center.10.81.103.82.nip.io          201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+cee-global    show-tac-manager-ingress                   <none>   show-tac-manager.10.81.103.82.nip.io                        201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+kube-system   kubernetes-dashboard                       <none>   kubernetes-dashboard.10.81.103.82.nip.io                    201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+registry      charts-ingress                             <none>   charts.201.201.201.101.nip.io                               201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
+registry      registry-ingress                           <none>   docker.201.201.201.101.nip.io                               201.201.201.11,201.201.201.12,201.201.201.13   80, 443   11d
 ```
 
 - SSH to cnBNG CP Ops Center at port 2024
