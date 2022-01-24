@@ -38,8 +38,509 @@ SMI Deployer Should be Preinstalled: We can either use Inception itself as SMI D
 
 ## Step 1: CNDP Preparation
 
+- We have following hosts to deploy cnBNG CP. In this tutorial all UCS servers have same UCS access credentials. 
 
-## Step 4: cnBNG CP Dpeloyment
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th></th>
+    <th>CIMC IP</th>
+  </tr>
+  <tr>
+    <td>Server-1</td>
+    <td>10.81.103.30</td>
+  </tr>
+  <tr>
+    <td>Server-2</td>
+    <td>10.81.103.31</td>
+  </tr>
+  <tr>
+    <td>Server-3</td>
+    <td>10.81.103.32</td>
+  </tr>
+  <tr>
+    <td>Server-4</td>
+    <td>10.81.103.33</td>
+  </tr>
+</table>
+
+- We will use following networks on each UCS server:
+
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th>Network</th>
+    <th>Bond I/f</th>
+    <th>NIC/Port</th>
+    <th>VLAN</th>
+    <th>Host VLAN Interface</th>
+     </tr>
+  <tr>
+    <td>Host Management</td>
+    <td>bd0</td>
+    <td>MLOM</td>
+    <td>3103</td>
+    <td>bd0.mgmt.3103</td>
+  </tr>
+  <tr>
+    <td>k8s-api-net</td>
+    <td>bd0</td>
+    <td>MLOM</td>
+    <td>308</td>
+    <td>bd0.k8s.308</td>
+  </tr>
+  <tr>
+    <td>svc-net1</td>
+    <td>bd1</td>
+    <td>PCIE0,PCIE1</td>
+    <td>313</td>
+    <td>bd1.sci.3103</td>
+  </tr>
+  <tr>
+    <td>svc-net2</td>
+    <td>bd1</td>
+    <td>PCIE0,PCIE1</td>
+    <td>314</td>
+    <td>bd1.radius.3103</td>
+  </tr>
+</table>
+
+
+- Let us now look at the IP addressing we will be using for this deployment. In this tutorial we will use a subnet for CIMC (10.81.103.0/24) and an Internal subnet(208.208.208.0/24) for k8s operations. We will then attach two service networks- svc-net1 and svc-net2 (213.213.213.0/24 and 214.214.214.0/24 respectively). svc-net1 will be used for cnBNG CP-UP communication whereas svc-net2 will be used for cnBNG CP-Radius communication. We will also create a management network for Host OS management in same network as CIMC (10.81.103.0/24).
+
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th>UCS Server</th>
+    <th>IP Address 1 (Host Management)</th>
+    <th>IP Address 2 (k8s-api-net)</th>
+    <th>IP Address 3 (svc-net1)</th>
+    <th>IP Address 4 (svc-net2)</th>
+     </tr>
+  <tr>
+    <td>Server-1</td>
+    <td>10.81.103.59</td>
+    <td>208.208.208.11</td>
+    <td>213.213.213.11</td>
+    <td>214.214.214.11</td>
+  </tr>
+  <tr>
+    <td>Server-2</td>
+    <td>10.81.103.60</td>
+    <td>208.208.208.12</td>
+    <td>NA</td>
+    <td>NA</td>
+  </tr>
+  <tr>
+    <td>Server-3</td>
+    <td>10.81.103.61</td>
+    <td>208.208.208.13</td>
+    <td>NA</td>
+    <td>NA</td>
+  </tr>
+  <tr>
+    <td>Server-1</td>
+    <td>10.81.103.62</td>
+    <td>208.208.208.14</td>
+    <td>213.213.213.12</td>
+    <td>214.214.214.12</td>
+  </tr>
+</table>
+
+- We would also need Virtual IPs which will be used for VRRP between similar kind nodes to provide HA:
+
+<table style="width:100%" border = "2">
+  <tr bgcolor="lightblue">
+    <th>VIP Type/Type</th>
+    <th>IP Address</th>
+    <th>Remarks</th>
+  </tr>
+  <tr>
+    <td>Master VIP1</td>
+    <td>10.81.103.113</td>
+    <td>Used for management access: k8s-master, ops-center, grafana etc.</td>
+  </tr>
+  <tr>
+    <td>Master VIP2</td>
+    <td>208.208.208.101</td>
+    <td>k8s-api-net access</td>
+  </tr>
+  <tr>
+    <td>Protocol VIP1</td>
+    <td>208.208.208.51</td>
+    <td>k8s-api-net vip for protocol labelled servers</td>
+  </tr>
+  <tr>
+    <td>Protocol VIP2</td>
+    <td>213.213.213.51</td>
+    <td>svc-net-1 VIP, will be used for peering with cnBNG UP</td>
+  </tr>
+ <tr>
+    <td>Proto VIP3</td>
+    <td>214.214.214.51</td>
+    <td>svc-net-2 VIP, will be used for Radius communication</td>
+  </tr>
+</table>
+
+## Step 2: SSH Key Generation
+
+This is for security reasons, where cnBNG CP VM can only be accessed by ssh key and not through password by default.
+
+1. SSH Login to Inception VM
+1. Generate SSH key using: 
+    ```ssh-keygen -t rsa```
+1. Note down ssh keys in a file from .ssh/id_rsa (private) and ./ssh/id_rsa.pub (public)
+1. Remove line breaks from private key and replace them with string "\n"
+1. Remove line breaks from public key if there are any.
+
+## Step 3: Cluster Configuration
+
+-  We will first define the software repos for cnBNG CP and CEE. cnBNG software is available as a tarball and it can be hosted on local http server for offline deployment. In this step we configure the software repository locations for tarball. We setup software cnf for both cnBNG CP and CEE. URL and SHA256 depends on the version of the image and the url location, so these two could change for your deployment.
+
+```
+software cnf bng
+ url             http://192.168.107.148/images/CP/cp_30sep21/bng/bng.2021.04.m0.i74.tar
+ sha256          e36b5ff86f35508539a8c8c8614ea227e67f97cf94830a8cee44fe0d2234dc1c
+ description     bng-products
+exit
+software cnf cee
+ url         http://192.168.107.148/images/CP/cp_30sep21/cee-2020.02.6.i04.tar
+ sha256      b5040e9ad711ef743168bf382317a89e47138163765642c432eb5b80d7881f57
+ description cee-products
+exit
+```
+
+- Next we define two host profiles, host profile is used to for BIOS settings on UCS e.g. Hyperthreading Enable. We can host these profiles at the same location on HTTP server as software cnf tarballs in previous step.
+
+```
+software host-profile bng-ht-enable
+ url    http://10.81.103.105/cnbng-cndp/ht.tgz
+ sha256 aa7e240f2b785a8c8d6b7cd6f79fe162584dc01b7e9d32a068be7f6e5055f664
+exit
+software host-profile bng-ht-sysctl-enable
+ url    http://10.81.103.105/cnbng-cndp/ht_sysctl.tgz
+ sha256 cf468ac05de073fa51a5811a5eeb517fe003a55c394e5382686a573a472bf998
+exit
+```
+
+- Next we define environment and Cluster configuration based on our deployment schemel. The configuration is self explanatory. However do note two kinds of VIPs define here for master. 
+
+```
+environments bare-metal
+ ucs-server
+exit
+feature-gates test true
+clusters cnbng-cp-cluster1
+ environment bare-metal
+ addons ingress bind-ip-address 10.81.103.113
+ addons ingress bind-ip-address-internal 208.208.208.101
+ addons ingress enabled
+ addons kubernetes-dashboard enabled
+ addons istio enabled
+ addons cpu-partitioner enabled
+ addons cpu-partitioner tier small
+ configuration master-virtual-ip        208.208.208.101
+ configuration master-virtual-ip-cidr   24
+ configuration master-virtual-ip-interface bd0.k8s.308
+ configuration additional-master-virtual-ip 10.81.103.113
+ configuration additional-master-virtual-ip-cidr 24
+ configuration additional-master-virtual-ip-interface bd0.mgmt.3103
+ configuration virtual-ip-vrrp-router-id 60
+ configuration enable-pod-security-policy false
+ configuration pod-subnet               192.208.0.0/16
+ configuration allow-insecure-registry  true
+ configuration restrict-logging         false
+ node-defaults ssh-username username1
+ node-defaults k8s ssh-connection-private-key "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAwx+LkHa8U74BYN9rM3MS1H8K8ZiOdd8kqA5I8553KH75C/yV\nddtiQLBh7y+k9/YwUSsrbj6S4b6/Wb8CpTmeQXnlAfmY/LbmXUEaiKb6J4bXBEnN\ndaETOsOXUIx1CGg3Sv7wUEIOYUkNAlc71VNg0vBPnLDGwaD82lFYvqj46nwRLfTM\nzMrHNQ551zdXxTA1c0wLG+ZoLf3C43H26OqlYC7fYqxSfwH6EBpbUIvTOL3obKa2\nGZ4Bi+VPfqrfap+JW2sU7dh6jUCQLpO9NS1YWTVygnx5oIOnp9yGJO2GSNSIYQJ2\nAKpUC7gu3X/Q6hOotIgfHk7kYeSNirD1KwixrwIDAQABAoIBADKgQKne5MYlil4E\nGeBjfwM7Yy+EEZJrrysbabor52bOave9NVo67aczHHXeusLLUYX92WrlOV7xCtzS\nPnF4HaOHaO+2PwdyvRp9BdFm4YjX53npXDGk9URN8zim+MaRo6cFtnxcZza+qW1u\nDMwwsfKI/178TtV2W6SZbpkpZkwQJ/cN1fljxuQYubOujMZErc1Q7TlIQYrG8XVz\naOTVkYBU+O2DOKkWp4AM9qe/0RIdjmz1ZZHRB83iF3/OaU3j2mhlhRQwTiS3jcGX\nkWoovz/GmFAcw+VSz81tz2UFmGNczkl8F5t4afYq31M7r+restSd6Mc7dcqWA7pR\nYflz7SECgYEA+qleQDAxe9cSRyGk0aCXV7NKQnvmIReSiRxibNne2FTnLaBH7iM7\nGe8XT23gFLCvM1qmpaLxjQZEP4A7WTaZuTEQAvVHYM+4m+1XDz4+ePaSCFwru8Q/\nLvE0h45JGfuHiXIWQNsyycSnDa+50BQ1a+EruzsmdHDvVnhO/QK0gzsCgYEAx0dg\nVbOjGzEvuGTfTI8qqRYz2XQjSKr6IHqRGY/h2hVcJo0Is+fr9n2QlebJ9oIOVnw7\npSlPgnMNcI9b74aCGuVnVUW/23TRkTvq6goNBa2V++d9EHPNo2gahc1tuJZzkp8I\nnZONBHzU8jwe9nBbK7uuz9i8cgSnMaWbS6Q8PB0CgYEAoXzoWdYyqyQ+hFEqjFs3\n5ap+lyKXeo5jO65rwtECfsEERyLR9JwCAY1FqUiSawIBfcZTQrcdg8ubwIVutuU0\nWFlBhYZcPATXXK2lvw5M1UWVg4lOK6QdSLLhMsv6UKD6CxTTPWl66P6m2Wxy+5lp\naV0h/Xf4KGBx8XWE/f/2J+0CgYEAlfJGMZZut4pGLwhv4WqkngBf2VMDLa3Bcejn\n/4T9W5zQ7w0WLFDpg1quDa1P8JWh9j+ancc81Zp+1WB5u/zJLzXIkChgmeAHxLGC\nLMKNU+VuwtJHj7ajWD6AHogZ9Ff49K2HzRH2fRb1IKROY/7dC0Y43ppmCaEosTm8\nZalZzZ0CgYAF6KnlPw1qbpVZYyVcPw38omeisMs/92ovf4oqzJpZ5zCW1iKKRpQR\nq4oDLca0zJS/AUmXFTIG//VHvsna4A2JrmNS4rI+bEgwSDrRKHmX8Idctdu1ifgS\nrRtv1s5RfTZ67eWVYE6rUn1+EFBZwAzZorOXL3CzbjZEXUCJeOH6Lw==\n-----END RSA PRIVATE KEY-----"
+ node-defaults initial-boot default-user username1
+ node-defaults initial-boot default-user-ssh-public-key "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDH4uQdrxTvgFg32szcxLUfwrxmI513ySoDkjznncofvkL/JV122JAsGHvL6T39jBRKytuPpLhvr9ZvwKlOZ5BeeUB+Zj8tuZdQRqIpvonhtcESc11oRM6w5dQjHUIaDdK/vBQQg5hSQ0CVzvVU2DS8E+csMbBoPzaUVi+qPjqfBEt9MzMysc1DnnXN1fFMDVzTAsb5mgt/cLjcfbo6qVgLt9irFJ/AfoQGltQi9M4vehsprYZngGL5U9+qt9qn4lbaxTt2HqNQJAuk701LVhZNXKCfHmgg6en3IYk7YZI1IhhAnYAqlQLuC7df9DqE6i0iB8eTuRh5I2KsPUrCLGv cloud-user@inception"
+ node-defaults initial-boot default-user-password password1
+```
+
+- Define netplan to create bond interfaces and VLANs
+
+```
+node-defaults initial-boot netplan ethernets eno1
+  dhcp4 false
+  dhcp6 false
+ exit
+ node-defaults initial-boot netplan ethernets eno2
+  dhcp4 false
+  dhcp6 false
+ exit
+!! eno5 and eno6 are MLOM ports
+ node-defaults initial-boot netplan ethernets eno5
+  dhcp4 false
+  dhcp6 false
+ exit
+ node-defaults initial-boot netplan ethernets eno6
+  dhcp4 false
+  dhcp6 false
+ exit
+!! enp216s0f1 and enp94s0f0 are PCIE0 and PCIE1 ports respectively 
+ node-defaults initial-boot netplan ethernets enp216s0f0
+  dhcp4 false
+  dhcp6 false
+ exit
+ node-defaults initial-boot netplan ethernets enp216s0f1
+  dhcp4 false
+  dhcp6 false
+ exit
+ node-defaults initial-boot netplan ethernets enp94s0f0
+  dhcp4 false
+  dhcp6 false
+ exit
+ node-defaults initial-boot netplan ethernets enp94s0f1
+  dhcp4 false
+  dhcp6 false
+ exit
+ node-defaults initial-boot netplan bonds bd0
+  dhcp4      false
+  dhcp6      false
+  optional   true
+  interfaces [ eno5 eno6 ]   
+  parameters mode      active-backup
+  parameters mii-monitor-interval 100
+  parameters fail-over-mac-policy active
+ exit
+ node-defaults initial-boot netplan bonds bd1
+  dhcp4      false
+  dhcp6      false
+  optional   true
+  interfaces [ enp216s0f1 enp94s0f0 ]  
+  parameters mode      active-backup
+  parameters mii-monitor-interval 100
+  parameters fail-over-mac-policy active
+ exit
+!! VLANs are defined here, change it as per your environment
+ node-defaults initial-boot netplan vlans bd0.k8s.308
+  dhcp4 false
+  dhcp6 false
+  id    308
+  link  bd0
+ exit
+```
+
+- Next define the CIMC access details and parameters. Make sure NTP server is reachable from all servers and resides in common management network.
+
+```
+node-defaults ucs-server cimc user admin
+ node-defaults ucs-server cimc password CIMC_Password
+ node-defaults ucs-server cimc storage-adaptor create-virtual-drive true
+ node-defaults ucs-server cimc remote-management sol enabled
+ node-defaults ucs-server cimc remote-management sol baud-rate 115200
+ node-defaults ucs-server cimc remote-management sol comport com0
+ node-defaults ucs-server cimc remote-management sol ssh-port 2400
+ node-defaults ucs-server cimc networking ntp enabled
+ node-defaults ucs-server cimc networking ntp servers 72.163.32.44
+ exit
+ ```
+ 
+ - We now define NTP and node defaults
+ 
+ ```
+ node-defaults os ntp enabled
+ node-defaults os ntp servers clock.cisco.com
+ exit
+ node-defaults os ntp servers ntp.esl.cisco.com
+ exit
+ node-type-defaults master
+  initial-boot netplan vlans bd0.mgmt.3103
+   nameservers search [ cisco.com  ]
+   nameservers addresses [ 64.102.6.247 ]
+   id   3103
+   link bd0
+  exit
+ exit
+ node-type-defaults worker
+  initial-boot netplan vlans bd0.mgmt.3103
+   nameservers search [ cisco.com ]
+   nameservers addresses [ 64.102.6.247 ]
+   id   3103
+   link bd0
+  exit
+ exit
+```
+
+- Let’s now define the nodes for cluster creation. The definition is as per the plan we created above in Step-1.
+
+```
+nodes server-1
+  host-profile bng-ht-sysctl-enable
+  k8s node-type master
+  k8s ssh-ip 208.208.208.11
+  k8s node-ip 208.208.208.11
+  k8s node-labels smi.cisco.com/node-type oam 
+  exit
+  k8s node-labels smi.cisco.com/proto-type protocol
+  exit
+  ucs-server cimc ip-address 10.81.103.30
+  initial-boot netplan vlans bd0.k8s.308
+   addresses [ 208.208.208.11/24 ]
+  exit
+  initial-boot netplan vlans bd0.mgmt.3103
+   addresses [ 10.81.103.59/24 ]
+   gateway4  10.81.103.1
+  exit
+  initial-boot netplan vlans bd1.n4.313
+   dhcp4     false
+   dhcp6     false
+   addresses [ 213.213.213.11/24 ]
+   id        313
+   link      bd1
+  exit
+  initial-boot netplan vlans bd1.radius.314
+   dhcp4     false
+   dhcp6     false
+   addresses [ 214.214.214.11/24 ]
+   id        314
+   link      bd1
+  exit
+  os tuned enabled
+ exit
+ nodes server-2
+  host-profile bng-ht-enable
+  k8s node-type master
+  k8s ssh-ip 208.208.208.12
+  k8s node-ip 208.208.208.12
+  k8s node-labels smi.cisco.com/node-type oam
+  exit
+  k8s node-labels smi.cisco.com/sess-type cdl-node
+  exit
+  k8s node-labels smi.cisco.com/svc-type service
+  exit
+  ucs-server cimc ip-address 10.81.103.31
+  initial-boot netplan vlans bd0.k8s.308
+   addresses [ 208.208.208.12/24 ]
+  exit
+  initial-boot netplan vlans bd0.mgmt.3103
+   addresses [ 10.81.103.60/24 ]
+   gateway4  10.81.103.1
+  exit
+  os tuned enabled
+ exit
+ nodes server-3
+  host-profile bng-ht-enable
+  k8s node-type master
+  k8s ssh-ip 208.208.208.13
+  k8s node-ip 208.208.208.13
+  k8s node-labels smi.cisco.com/node-type oam
+  exit
+  k8s node-labels smi.cisco.com/sess-type cdl-node
+  exit
+  k8s node-labels smi.cisco.com/svc-type service
+  exit
+  ucs-server cimc ip-address 10.81.103.32
+  initial-boot netplan vlans bd0.k8s.308
+   addresses [ 208.208.208.13/24 ]
+  exit
+  initial-boot netplan vlans bd0.mgmt.3103
+   addresses [ 10.81.103.61/24 ]
+   gateway4  10.81.103.1
+  exit
+  os tuned enabled
+ exit
+ nodes server-4
+  host-profile bng-ht-sysctl-enable
+  k8s node-type worker
+  k8s ssh-ip 208.208.208.14
+  k8s node-ip 208.208.208.14
+  k8s node-labels smi.cisco.com/proto-type protocol
+  exit
+  ucs-server cimc ip-address 10.81.103.33
+  initial-boot netplan vlans bd0.k8s.308
+   addresses [ 208.208.208.14/24 ]
+  exit
+  initial-boot netplan vlans bd0.mgmt.3103
+   addresses [ 10.81.103.62/24 ]
+   gateway4  10.81.103.1
+  exit
+  initial-boot netplan vlans bd1.n4.313
+   dhcp4     false
+   dhcp6     false
+   addresses [ 213.213.213.12/24 ]
+   id        313
+   link      bd1
+  exit
+  initial-boot netplan vlans bd1.radius.314
+   dhcp4     false
+   dhcp6     false
+   addresses [ 214.214.214.12/24 ]
+   id        314
+   link      bd1
+  exit
+  os tuned enabled
+ exit
+```
+
+-  We now define the virtual IPs 
+
+```
+virtual-ips udpvip
+  check-ports    [ 28000 ]
+  vrrp-interface bd1.n4.313
+  vrrp-router-id 222
+  check-interface bd0.k8s.308
+  exit
+  check-interface bd1.n4.313
+  exit
+  check-interface bd1.radius.314
+  exit
+  ipv4-addresses 208.208.208.51
+   mask      24
+   broadcast 208.208.208.255
+   device    bd0.k8s.308
+  exit
+  ipv4-addresses 213.213.213.51
+   mask      24
+   broadcast 213.213.213.255
+   device    bd1.n4.313
+  exit
+  ipv4-addresses 214.214.214.51
+   mask      24
+   broadcast 214.214.214.255
+   device    bd1.radius.314
+  exit
+  hosts server-1
+   priority 100
+  exit
+  hosts server-4
+   priority 100
+  exit
+ exit
+```
+
+- We now define the Ops Center configurations
+
+```
+	clusters cnbng-cp-cluster1
+	 ops-centers bng bng
+	  repository-local        bng
+	  sync-default-repository true
+	  netconf-ip              10.81.103.113
+	  netconf-port            2022
+	  ssh-ip                  10.81.103.113
+	  ssh-port                2024
+	  ingress-hostname        10.81.103.113.nip.io
+	  initial-boot-parameters use-volume-claims true
+	  initial-boot-parameters first-boot-password password1
+	  initial-boot-parameters auto-deploy false
+	  initial-boot-parameters single-node true
+	 exit
+	 ops-centers cee global
+	  repository-local        cee
+	  sync-default-repository true
+	  netconf-ip              10.81.103.113
+	  netconf-port            3024
+	  ssh-ip                  10.81.103.113
+	  ssh-port                3023
+	  ingress-hostname        10.81.103.113.nip.io
+	  initial-boot-parameters use-volume-claims true
+	  initial-boot-parameters first-boot-password password1
+	  initial-boot-parameters auto-deploy true
+	  initial-boot-parameters single-node true
+	 exit
+exit
+```
+
+## Step 4: cnBNG CP Deployment
 
 - After committing configuration which we build in Step-4 on SMI Deployer. We can start the cluster sync.
 
