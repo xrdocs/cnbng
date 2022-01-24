@@ -510,33 +510,33 @@ virtual-ips udpvip
 - We now define the Ops Center configurations
 
 ```
-	clusters cnbng-cp-cluster1
-	 ops-centers bng bng
-	  repository-local        bng
-	  sync-default-repository true
-	  netconf-ip              10.81.103.113
-	  netconf-port            2022
-	  ssh-ip                  10.81.103.113
-	  ssh-port                2024
-	  ingress-hostname        10.81.103.113.nip.io
-	  initial-boot-parameters use-volume-claims true
-	  initial-boot-parameters first-boot-password password1
-	  initial-boot-parameters auto-deploy false
-	  initial-boot-parameters single-node true
-	 exit
-	 ops-centers cee global
-	  repository-local        cee
-	  sync-default-repository true
-	  netconf-ip              10.81.103.113
-	  netconf-port            3024
-	  ssh-ip                  10.81.103.113
-	  ssh-port                3023
-	  ingress-hostname        10.81.103.113.nip.io
-	  initial-boot-parameters use-volume-claims true
-	  initial-boot-parameters first-boot-password password1
-	  initial-boot-parameters auto-deploy true
-	  initial-boot-parameters single-node true
-	 exit
+clusters cnbng-cp-cluster1
+  ops-centers bng bng
+    repository-local        bng
+    sync-default-repository true
+    netconf-ip              10.81.103.113
+    netconf-port            2022
+    ssh-ip                  10.81.103.113
+    ssh-port                2024
+    ingress-hostname        10.81.103.113.nip.io
+    initial-boot-parameters use-volume-claims true
+    initial-boot-parameters first-boot-password password1
+    initial-boot-parameters auto-deploy false
+    initial-boot-parameters single-node true
+  exit
+  ops-centers cee global
+  	repository-local        cee
+    sync-default-repository true
+    netconf-ip              10.81.103.113
+    netconf-port            3024
+    ssh-ip                  10.81.103.113
+    ssh-port                3023
+    ingress-hostname        10.81.103.113.nip.io
+    initial-boot-parameters use-volume-claims true
+    initial-boot-parameters first-boot-password password1
+    initial-boot-parameters auto-deploy true
+    initial-boot-parameters single-node true
+  exit
 exit
 ```
 
