@@ -575,7 +575,7 @@ After the cluster is deployed it can be verified using below commands
 - Connect to K8s Master node using SSH with Master VIP1 IP
 
 ```
-ssh cisco@master-vip1-ip
+ssh cisco@10.81.103.113
 ```
 
 - After connecting verify that all PODs are in Running state
@@ -599,15 +599,15 @@ kubectl get ingress -A
 - SSH to cnBNG CP Ops Center at port 2024
   
 ```
-cloud-user@inception:~$ ssh admin@10.81.103.101 -p 2024
-admin@10.81.103.101's password: 
+cloud-user@inception:~$ ssh admin@10.81.103.113 -p 2024
+admin@10.81.103.113's password: 
 
       Welcome to the bng CLI on pod2/bng
       Copyright © 2016-2020, Cisco Systems, Inc.
       All rights reserved.
     
-User admin last logged in 2021-11-19T04:12:32.912093+00:00, to ops-center-bng-bng-ops-center-77fb6479fc-dtvt2, from 10.81.103.101 using cli-ssh
-admin connected from 10.81.103.101 using ssh on ops-center-bng-bng-ops-center-77fb6479fc-dtvt2
+User admin last logged in 2021-11-19T04:12:32.912093+00:00, to ops-center-bng-bng-ops-center-77fb6479fc-dtvt2, from 10.81.103.113 using cli-ssh
+admin connected from 10.81.103.113 using ssh on ops-center-bng-bng-ops-center-77fb6479fc-dtvt2
 [pod1/bng] bng# 
 [pod1/bng] bng# 
 ```
@@ -615,8 +615,8 @@ admin connected from 10.81.103.101 using ssh on ops-center-bng-bng-ops-center-77
 - We can also test Netconf Interface availability of cnBNG Ops Center using ssh
   
 ```
-cloud-user@inception:~$ ssh admin@10.81.103.101 -p 3022 -s netconf    
-Warning: Permanently added '[10.81.103.101]:3022' (RSA) to the list of known hosts.
+cloud-user@inception:~$ ssh admin@10.81.103.113 -p 3022 -s netconf    
+Warning: Permanently added '[10.81.103.113]:3022' (RSA) to the list of known hosts.
 admin@10.81.103.101's password: 
 <?xml version="1.0" encoding="UTF-8"?>
 <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
