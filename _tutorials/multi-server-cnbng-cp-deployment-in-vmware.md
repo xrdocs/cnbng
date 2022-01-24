@@ -1004,7 +1004,7 @@ clusters cnbng-cp-cluster1
 exit
 ```
 
-## Step 5: cnBNG CP Dpeloyment
+## Step 5: cnBNG CP Deployment
 
 - After committing configuration which we build in Step-4 on SMI Deployer. We can start the cluster sync.
 
