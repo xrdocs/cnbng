@@ -117,24 +117,28 @@ We need following networks on ESXi hosts. Create following networks in VMWare ES
     <td>vSwitch_PCIE0</td>
     <td>vnic corresponding to PCIE0 port</td>
   </tr>
+<!--
   <tr>
     <td>svc-net1</td>
     <td>PCIE1_VLANx</td>
     <td>vSwitch_PCIE1</td>
     <td>vnic corresponding to PCIE1 port</td>
   </tr>
+-->
   <tr>
     <td>svc-net2</td>
     <td>PCIE0_VLANy</td>
     <td>vSwitch_PCIE0</td>
     <td>vnic corresponding to PCIE0 port</td>
   </tr>
+ <!--
   <tr>
     <td>svc-net2</td>
     <td>PCIE1_VLANy</td>
     <td>vSwitch_PCIE1</td>
     <td>vnic corresponding to PCIE1 port</td>
   </tr>
+-->
   <tr>
     <td>k8s-api-net</td>
     <td>PCIE0_VLANz</td>
