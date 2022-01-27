@@ -38,7 +38,11 @@ We will deploy Multi server/node cnBNG CP in following steps:
 
 ## Deployment Logical Topology
 
+<!--
 ![cnbng-cp-multi-server1.png]({{site.baseurl}}/images/cnbng-cp-multi-server1.png)
+-->
+![multi-server-vmware-logical.png]({{site.baseurl}}/images/multi-server-vmware-logical.png)
+
 
 ## Physical Networking Topology
 
