@@ -33,7 +33,7 @@ We will deploy Multi server cnBNG CP in following steps:
 
 SMI Deployer Should be Preinstalled: We can either use Inception itself as SMI Deployer or deploy a separate cluster manager using Inception. Refer to Inception Server deployment guide or Cluster Manager Deployment Guide in tutorials.
 
-Further SMI Deployer/Cluster Manager can be deployed as a VM or on a baremetal server as well. Refer to "Demystifying inception, cluster manager and smi deployer".
+Further SMI Deployer/Cluster Manager can be deployed as a VM or on a baremetal server as well. 
 
 ***Note***: SMI Deployer requires access to CIMC for CNDP Cluster Deployment
 {: .notice--info}
