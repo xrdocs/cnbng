@@ -8,7 +8,7 @@ excerpt: >-
   deployment is also called as CNDP deployment, it allows cnBNG CP to be
   deployed without need of running hypervisor. CNDP deployment offers 20%
   performance improvement over traditional hypervisor/VM based deployment.
-position: hidden
+position: top
 ---
 
 {% include toc %}
