@@ -104,7 +104,7 @@ SMI Deployer Should be Preinstalled: We can either use Inception itself as SMI D
 </table>
 
 
-- Let us now look at the IP addressing we will be using for this deployment. In this tutorial we will use a subnet for CIMC (10.81.103.0/24) and an Internal subnet(208.208.208.0/24) for k8s operations. We will then attach two service networks- svc-net1 and svc-net2 (213.213.213.0/24 and 214.214.214.0/24 respectively). svc-net1 will be used for cnBNG CP-UP communication whereas svc-net2 will be used for cnBNG CP-Radius communication. We will also create a management network for Host OS management in same network as CIMC (10.81.103.0/24).
+- In this tutorial we will use a subnet for CIMC (10.81.103.0/24) and an Internal subnet(208.208.208.0/24) for k8s operations. We will then attach two service networks- svc-net1 and svc-net2 (213.213.213.0/24 and 214.214.214.0/24 respectively). svc-net1 will be used for cnBNG CP-UP communication whereas svc-net2 will be used for cnBNG CP-Radius communication. We will also create a management network for Host OS management in same network as CIMC (10.81.103.0/24).
 
 <table style="width:100%" border = "2">
   <tr bgcolor="lightblue">
@@ -592,10 +592,10 @@ kubectl get nodes
 e.g.
 cisco@cnbng-cp-cluster1-server-1:~$ kubectl get nodes
 NAME                          STATUS   ROLES                  AGE   VERSION
-svi-cnbng-cndp-tb1-server-1   Ready    control-plane,master   11d   v1.21.0
-svi-cnbng-cndp-tb1-server-2   Ready    control-plane,master   11d   v1.21.0
-svi-cnbng-cndp-tb1-server-3   Ready    control-plane,master   11d   v1.21.0
-svi-cnbng-cndp-tb1-server-4   Ready    <none>                 11d   v1.21.0
+cnbng-cp-cluster1-server-1   Ready    control-plane,master   11d   v1.21.0
+cnbng-cp-cluster1-server-2   Ready    control-plane,master   11d   v1.21.0
+cnbng-cp-cluster1-server-3   Ready    control-plane,master   11d   v1.21.0
+cnbng-cp-cluster1-server-4   Ready    <none>                 11d   v1.21.0
 ```
 
 - We can connect to Grafana at the grafana ingress
