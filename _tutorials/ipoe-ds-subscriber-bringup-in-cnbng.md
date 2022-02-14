@@ -241,14 +241,15 @@ exit
 
 ## cnBNG UP Configuration
 
-UP Configuration has mainly three constructs and then feature definitions specially QoS and ACL
+UP Configuration has mainly four constructs for cnBNG
 
-- Loopback for BNG and association/cnbng-nal Configurations
+- Loopback for cnBNG CP-UP association
 - DHCP Configuration
 - Access Interface
+- Feature definitions: QoS, ACL
 
 ### Loopback Creation
-We need to create a Loopback for BNG use.
+We need to create a Loopback for cnBNG use.
 
 ```
 interface Loopback1
@@ -257,7 +258,7 @@ interface Loopback1
 
 ### Association Configuration
 
-This is where we define association between cnBNG CP and UP. The auto-loopback with secondary-address-upadte enabled will make sure we are able to assign IPs dynamically from IPAM. 
+This is where we define association settings between cnBNG CP and UP. The auto-loopback with secondary-address-upadte enabled will make sure we are able to assign IPs dynamically from IPAM. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
