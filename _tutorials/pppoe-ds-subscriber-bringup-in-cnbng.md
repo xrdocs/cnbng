@@ -6,7 +6,7 @@ author: Gurpreet Dhaliwal
 excerpt: >-
   Learn how to bring a PPPoE Dualstack session in this tutorial. This tutorial
   covers pap/chap auth for PPPoE subscriber and accounting.
-position: hidden
+position: top
 ---
 ## Introduction
 
