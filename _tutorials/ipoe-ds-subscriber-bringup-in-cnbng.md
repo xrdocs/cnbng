@@ -258,24 +258,24 @@ interface Loopback1
 
 ### Association Configuration
 
-This is where we define association settings between cnBNG CP and UP. The auto-loopback with secondary-address-upadte enabled will make sure we are able to assign IPs dynamically from IPAM. 
+This is where we define association settings between cnBNG CP and UP. The auto-loopback with "secondary-address-upadte enable" will allow dynamic IP address allocations using IPAM.
 
 <div class="highlighter-rouge">
 <pre class="highlight">
 <code>
 cnbng-nal location 0/RP0/CPU0
  hostidentifier ASR9k-1
-!! up-server ip should be the ip of UP interface which will be used as source for SCi communication
+ <mark>!! up-server ip should be the ip of UP interface which will be used as source for SCi communication</mark>
  up-server ipv4 <mark>10.0.100.2</mark> vrf default
-!! cp-server ip is the IP of UDP Proxy configuration, in AIO this is the IP of the VM
+ <mark>!! cp-server ip is the IP of UDP Proxy configuration, in AIO this is the IP of the VM</mark>
  cp-server primary ipv4 <mark>10.0.100.1</mark>
  auto-loopback vrf default
   interface Loopback1
-!! Any dummy IP
+   <mark>!! Any dummy IP</mark>
    primary-address <mark>1.1.1.1</mark>
   !
  !
-!! retry-count specifies how many times UP should retry the connection with CP before declaring CP as dead
+ <mark>!! retry-count specifies how many times UP should retry the connection with CP before declaring CP as dead</mark>
  cp-association retry-count 10
  secondary-address-update enable
 !
