@@ -175,7 +175,7 @@ Further SMI Deployer/Cluster Manager can be deployed as a VM or on a baremetal s
     <td>svc-net-1 VIP, will be used for peering with cnBNG UP</td>
   </tr>
  <tr>
-    <td>Proto VIP3</td>
+    <td>Protocol VIP3</td>
     <td>214.214.214.51</td>
     <td>svc-net-2 VIP, will be used for Radius communication</td>
   </tr>
@@ -606,7 +606,7 @@ cnbng-cp-cluster1-server-4   Ready    <none>                 11d   v1.21.0
 kubectl get ingress -A
 
 e.g.
-cloud-user@svi-cnbng-cndp-tb4-server-1:~$ kubectl get ingress -A
+cloud-user@cnbng-cp-cluster1-server-1:~$ kubectl get ingress -A
 NAMESPACE     NAME                                       CLASS    HOSTS                                                        ADDRESS                                        PORTS     AGE
 bng-bng       cli-ingress-bng-bng-ops-center             <none>   cli.bng-bng-ops-center.10.81.103.113.nip.io                  208.208.208.11,208.208.208.12,208.208.208.13   80, 443   3d22h
 bng-bng       documentation-ingress                      <none>   documentation.bng-bng-ops-center.10.81.103.113.nip.io        208.208.208.11,208.208.208.12,208.208.208.13   80, 443   3d22h
@@ -701,6 +701,188 @@ admin@10.81.103.101's password:
 </capabilities>
 <session-id>171</session-id></hello>]]>]]>
 ```
+
+## Initial cnBNG CP Configurations
+If you have deployed cnBNG CP a fresh then most probably, initial cnBNG CP configuration is not applied on Ops Center. Follow below steps to apply initial configuratuon to cnBNG CP Ops Center
+
+- SSH login to cnBNG CP Ops Center CLI
+
+```
+cisco@cnbng-cp-cluster1-server-1:~$ ssh admin@10.81.103.113 -p 2024         
+Warning: Permanently added '[10.81.103.113]:2024' (RSA) to the list of known hosts.
+admin@10.81.103.113's password: 
+
+      Welcome to the bng CLI on pod100/bng
+      Copyright © 2016-2020, Cisco Systems, Inc.
+      All rights reserved.
+    
+User admin last logged in 2021-12-01T11:42:45.247257+00:00, to ops-center-bng-bng-ops-center-5666d4cb6-dj7sv, from 10.81.103.113 using cli-ssh
+admin connected from 10.81.103.113 using ssh on ops-center-bng-bng-ops-center-5666d4cb6-dj7sv
+[pod100/bng] bng# 
+```
+
+- Change to config mode in Ops Center
+
+```
+[cnbng-cp-cluster1/bng] bng# config
+Entering configuration mode terminal
+[cnbng-cp-cluster1/bng] bng(config)# 
+```
+
+- Apply following initial configuration. With changes to "endpoint radius" and "udp proxy" configs. Both "endpoint radius" and "udp-proxy" should use IP of cnBNG CP service network side protocol VIP or in case of AIO it should be the IP of AIO VM used for peering between cnBNG CP and UP.
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+cdl node-type session
+cdl label-config session
+ endpoint key smi.cisco.com/sess-type
+ endpoint value cdl-node
+ slot map 1
+  key   smi.cisco.com/sess-type
+  value cdl-node
+ exit
+ slot map 2
+  key   smi.cisco.com/sess-type
+  value cdl-node
+ exit
+ index map 1
+  key   smi.cisco.com/sess-type
+  value cdl-node
+ exit
+exit
+cdl logging default-log-level error
+cdl datastore session
+ label-config session
+ slice-names  [ 1 ]
+ endpoint replica 2
+ endpoint copies-per-node 2
+ endpoint settings slot-timeout-ms 750
+ index replica 2
+ index map 1
+ slot replica 2
+ slot map 2
+ slot notification limit           300
+ slot notification max-concurrent-bulk-notifications 20
+exit
+cdl kafka replica 2
+cdl kafka label-config key smi.cisco.com/sess-type
+cdl kafka label-config value cdl-node
+etcd backup disable true
+instance instance-id 1
+ endpoint sm
+  replicas 2
+  nodes    2
+ exit
+ endpoint nodemgr
+  replicas 1
+  nodes    2
+ exit
+ endpoint n4-protocol
+  replicas 1
+  nodes    2
+  retransmission timeout 0 max-retry 1
+ exit
+ endpoint dhcp
+  replicas 1
+  nodes    2
+ exit
+ endpoint pppoe
+  replicas 1
+  nodes    2
+ exit
+ endpoint radius
+  replicas 1
+  nodes    2
+  <mark>!! Protocol VIP3 IP</mark>
+  vip-ip <mark>214.214.214.51</mark>
+  interface coa-nas
+   sla response 25000
+   vip-ip <mark>214.214.214.51</mark>
+  exit
+ exit
+ endpoint udp-proxy
+  replicas     1
+  nodes        2
+  <mark>!! Protocol VIP1 IP</mark>
+  internal-vip <mark>208.208.208.51</mark>
+  <mark>!! Protocol VIP2 IP</mark>
+  vip-ip <mark>213.213.213.51</mark>
+  interface n4
+   sla response 25000
+  exit
+  interface gtpu
+   sla response 25000
+  exit
+ exit
+exit
+logging transaction duplicate disable
+logging level transaction error
+logging level tracing error
+logging error stack disable
+logging name bng-dhcp0.bngfsol.collision
+logging name infra.application.core level application error
+logging name infra.config.core level application error
+logging name infra.config.core level transaction error
+logging name infra.heap_dump.core level application error
+logging name infra.heap_dump.core level transaction error
+logging name infra.memory_cache.core level application error
+logging name infra.session_cache.core
+deployment
+ app-name     BNG
+ <mark>!! Change this to your cluster name</mark>
+ cluster-name <mark>Local</mark>
+ dc-name      DC
+exit
+k8 bng
+ etcd-endpoint      etcd:2379
+ datastore-endpoint datastore-ep-session:8882
+ tracing
+  enable
+  enable-trace-percent 30
+  append-messages      true
+  endpoint             jaeger-collector:9411
+ exit
+exit
+k8 label protocol-layer key smi.cisco.com/proto-type value protocol
+exit
+k8 label service-layer key smi.cisco.com/svc-type value service
+exit
+k8 label cdl-layer key smi.cisco.com/sess-type value cdl-node
+exit
+k8 label oam-layer key smi.cisco.com/node-type value oam
+exit
+resource cache-pod
+ gomaxproc 4
+exit
+instances instance 1
+ system-id  DC
+ <mark>!! Change this to your cluster ID</mark>
+ cluster-id <mark>Local</mark>
+ slice-name 1
+exit
+local-instance instance 1
+</code>
+</pre>
+</div>
+
+- Put system in running mode and commit the changes
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+[cnbng-cp-cluster1/bng] bng(config)# <mark>system mode running </mark>   
+[cnbng-cp-cluster1/bng] bng(config)# commit
+Commit complete.
+[cnbng-cp-cluster1/bng] bng(config)# 
+Message from confd-api-manager at 2021-12-01 12:36:05...
+Helm update is STARTING.  Trigger for update is STARTUP. 
+[cnbng-cp-cluster1/bng] bng(config)# 
+Message from confd-api-manager at 2021-12-01 12:36:08...
+Helm update is SUCCESS.  Trigger for update is STARTUP.
+</code>
+</pre>
+</div>
 
 
 ***Credits***: Special thanks to Sripada Rao for providing configurations from SVI.
