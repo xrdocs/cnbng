@@ -347,7 +347,7 @@ Following is Freeradius profile used in this tutorial
 
 ## Verifications
 
-- Verfiy that the cnBNG CP-UP association is up and Active on cnBNG CP
+- Verfiy that the cnBNG CP-UP association is up and Active on cnBNG CP ops-center
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -400,7 +400,7 @@ Control-Plane configurations:
 </pre>
 </div>
 
-- Verify subscriber session is up on cnBNG CP
+- Verify subscriber session is up on cnBNG CP ops-center
 
 <div class="highlighter-rouge">
 <pre class="highlight">
