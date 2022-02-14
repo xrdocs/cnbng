@@ -22,7 +22,7 @@ Radius profile configured here is to activate 100mbps plan service with v4 and v
 
 ![pppoe-ds-topo.png]({{site.baseurl}}/images/pppoe-ds-topo.png)
 
-## Prerequisite:
+## Prerequisite
 
 - cnBNG CP is already deployed and Ops Center is accessible. We will be using Ops Center CLI interface for configurations in this tutorial
 - cnBNG CP initial configuration is applied
