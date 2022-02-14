@@ -8,6 +8,8 @@ excerpt: >-
   covers pap/chap auth for PPPoE subscriber and accounting.
 position: top
 ---
+{% include toc %}
+
 ## Introduction
 
 To bringup a PPPoE dualstack(DS) subscriber in cnBNG, we need to setup some configurations on both cnBNG CP and cnBNG UP (ASR9k). In this tutorial we will bringup a PPPoE DS subscriber session with plan policies and required ACL received during authentication (pap/chap) from freeradius.  We will use IPCP to assign IPv4 address and DHCPv6 for IPv6 address (IANA+IAPD) assignment to the subscriber. 
