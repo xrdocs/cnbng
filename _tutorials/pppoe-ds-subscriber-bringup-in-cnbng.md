@@ -214,7 +214,7 @@ profile feature-template pppoe-1
   timeout authentication 5
   timeout retry  4
   <mark>!!! the following command will offload PPP keepalives to cnBNG UP</mark>
-  keepalive interval 30 retry 5
+  <mark>keepalive interval 30 retry 5</mark>
  exit
 exit
 </code>
@@ -249,6 +249,8 @@ profile subscriber subscriber-profile_pppoe-1
  exit
 exit
 ```
+
+
 
 
 
