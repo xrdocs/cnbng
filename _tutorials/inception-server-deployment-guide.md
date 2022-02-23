@@ -110,6 +110,8 @@ network:
 **Note2:** We can also use cloud-init for os changes. 
 {: .notice--info}
 
+- If you are not using cloud-init and editing netplan configuration manually, then it must be applied using "sudo netplan apply" after succefully editing the file.
+
 ### Inception Ubuntu VM OS customisation
 - SSH login to Inception VM using login password setup earlier
 - Now change the hostname of the VM to: <your-inception-vm-name>, using:
@@ -303,3 +305,6 @@ admin@localhost's password:
 </capabilities>
 <session-id>278399</session-id></hello>]]>]]>
 ```
+  
+**Note2:** You can exit from netconf prompt using ctrl+C
+{: .notice--info}
