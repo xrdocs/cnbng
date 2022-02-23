@@ -17,7 +17,7 @@ excerpt: >-
 {% include toc %}
 
 ## Introduction
-Inception Server is used to deploy the SMI cluster. It packages Ansible Swcripts which makes the deployment of SMI with all addons as a one click operation. The server also has a confD, which offers a user and machine friendly interfaces for SMI deployment. The main interfaces offered are Netconf, Restconf and CLI. In this tutorial we will deploy Inception Server in VMWare ESXi environment. The VMware vSphere Hypervisor (ESXi) 6.5 and 6.7 has been fully tested and meets performance benchmarks.
+Inception Server is used to deploy the SMI cluster. It packages Ansible Playbooks which makes the deployment of SMI with all addons as a one click operation. The server also has a confD, which offers a user and machine friendly interfaces for SMI deployment. The main interfaces offered are Netconf, Restconf and CLI. In this tutorial we will deploy Inception Server in VMWare ESXi environment. The VMware vSphere Hypervisor (ESXi) 6.5 and 6.7 has been fully tested and meets performance benchmarks.
 
 ![inception1.png]({{site.baseurl}}/images/inception1.png)
 
@@ -75,7 +75,7 @@ Download the SMI base ISO image. This is the image which will be used for Ubuntu
   - Click New CD/DVD Drive and do the following:
     - Select Datastore ISO file option to boot from the SMI Base .iso file. Browse to the location of the .iso file on the datastore set in Step 1.
     - In the Device Status field, select Connect at power on checkbox.
-- After the VM boots up: login to the VM (user: cloud-user, password: Cisco_123). You will be prompted to change the password immediately
+- After the VM boots up: login to the VM (user: cloud-user, password: Cisco_123). You will be prompted to change the password immediately. New password must be 14 characters.
 - Now setup Networking by editing "/etc/netplan/50-cloud-init.yaml" file. Here is a sample file config:
 
 <div class="highlighter-rouge">
@@ -125,7 +125,7 @@ sudo hostnamectl set-hostname <mark>inception</mark>
 </div>
 - Logout of the VM and login again to see hostname changes are reflected
 - Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present.
-- Replace default hostname for VM with the one you set into /etc/hosts file
+- Replace default hostname for VM with the one you set (in above step) inside /etc/hosts file. This will avoid hostname resolv error.
 
 ## Step 2: Installation of SMI Cluster Deployer using Tarball
 - Make a temporary folder and copy the offline SMI cluster deployer products tarball
