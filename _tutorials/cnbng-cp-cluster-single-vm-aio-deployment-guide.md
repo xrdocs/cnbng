@@ -149,6 +149,9 @@ exit
  "\n     network:\n        version: 2\n        ethernets:\n            ens192:\n                dhcp4: false\n                addresses:\n                - { {K8S_SSH_IP}}/24\n                routes:\n                - to: 0.0.0.0/0\n                  via: your-gateway-ip\n                nameservers:\n                    addresses:\n                    - your-dns1\n                    - your-dns2\n                    search:\n                    - your-domain\n\n\n"
 ```
 
+Don't forget to remove spaces in { { K8S_SSH_IP } } in the configs above.
+{: .notice--info}
+
 - Create Cluster configs with SSH public and private keys copied in Step-2 and netplan from previous step:
 
 <div class="highlighter-rouge">
