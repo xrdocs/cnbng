@@ -67,6 +67,11 @@ ssh-keygen -t rsa
 - Remove line breaks from private key and replace them with string "\n"
 - Remove line breaks from public key if there are any.
 
+**Note**: You can use following commands to replace line breaks:
+sed -z 's/\n/\\n/g' .ssh/id_rsa
+sed -z 's/\n/\\n/g' .ssh/id_rsa.pub
+{: .notice--info}
+
 ## Step 3: cnBNG CP deployment using Inception CM
 - Login to SMI Cluster Deployer or Cluster Manager on inception VM:
 
@@ -148,6 +153,10 @@ exit
 ```
  "\n     network:\n        version: 2\n        ethernets:\n            ens192:\n                dhcp4: false\n                addresses:\n                - { {K8S_SSH_IP}}/24\n                routes:\n                - to: 0.0.0.0/0\n                  via: your-gateway-ip\n                nameservers:\n                    addresses:\n                    - your-dns1\n                    - your-dns2\n                    search:\n                    - your-domain\n\n\n"
 ```
+
+**Note**: You can use following command to replace line breaks:
+sed -z 's/\n/\\n/g' netplan.yaml
+{: .notice--info}
 
 Don't forget to remove spaces in { { K8S_SSH_IP } } in the configs above.
 {: .notice--info}
