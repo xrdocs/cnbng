@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2022-06-28 15:48 +0530'
-title: PPPoE LAC Subscribers Bringup in cnBNG
+title: PPPoE LAC Subscriber Bringup in cnBNG
 position: top
 author: Gurpreet Dhaliwal
 excerpt: >-
