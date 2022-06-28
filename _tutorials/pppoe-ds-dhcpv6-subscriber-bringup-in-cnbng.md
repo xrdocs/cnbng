@@ -12,13 +12,11 @@ position: top
 
 ## Introduction
 
-To bringup a PPPoE dualstack(DS) subscriber in cnBNG, we need to setup some configurations on both cnBNG CP and cnBNG UP (ASR9k). In this tutorial we will bringup a PPPoE DS subscriber session with plan policies and required ACL received during authentication (pap/chap) from freeradius.  We will use IPCP to assign IPv4 address and DHCPv6 for IPv6 address (IANA+IAPD) assignment to the subscriber. 
+In this tutorial we will bringup PPPoE DS subscriber session with plan policies and required ACL received from freeradius.  We will use IPCP to assign IPv4 address and DHCPv6 for IPv6 address (IANA+IAPD) assignment to the subscriber. 
 
 ## Topology
 
-In this topology we are using Spirent as the CPE, cnBNG will assign both IPv4 and IPv6 (NA + PD) prefixes to CPE. IPv4 prefix will be assigned using IPCP whereas for IPv6 prefix assignments client will use DHCPv6. The prefix assignment will happen through IPAM which is integral part of cnBNG CP. 
-
-Radius profile configured here is to activate 100mbps plan service with v4 and v6 ACLs applied to dynamic subscriber interface on UP. 
+In this setup we are using Spirent as the CPE, cnBNG will assign both IPv4 and IPv6 (NA + PD) prefixes to CPE. IPv4 prefix will be assigned using IPCP whereas IPv6 prefix will be assigned through DHCPv6. The prefix assignment will happen through IPAM which is integral part of cnBNG Controlplane. 
 
 ![pppoe-ds-topo.png]({{site.baseurl}}/images/pppoe-ds-topo.png)
 
@@ -27,8 +25,8 @@ Radius profile configured here is to activate 100mbps plan service with v4 and v
 - cnBNG CP is already deployed and Ops Center is accessible. We will be using Ops Center CLI interface for configurations in this tutorial
 - cnBNG CP initial configuration is applied
 - cnBNG CP service network can reach cnBNG UP:
-	- In multi VM deployment, this means protocol VM VIP for service network is reachable from cnBNG UP for PFCP communications
-    - In Baremetal CNDP deployment, this means protocol VM VIP IP corresponding to the service network to reach cnBNG UP for PFCP communications
+	- In multi VM deployment, this means protocol VM VIP (service network) is reachable from cnBNG UP for PFCP communications
+    - In Baremetal CNDP deployment, this means protocol VM VIP IP, corresponding to the service network, to reach cnBNG UP for PFCP communications
 	- In single Node/VM AIO deployment, this means AIO VM IP is reachable from cnBNG UP
     
 ## cnBNG CP Configuration
@@ -43,10 +41,10 @@ cnBNG CP Configuration has following constructs/parts:
 - Profile Subscriber
 - User-Plane
 
-Let's understand each one step-by-step and apply in Ops Center in config mode.
+Let's understand each config construct step-by-step.
 
 ### IPAM
-This is where we define subscriber address pools for IPv4, IPv6 (NA) and IPv6 (PD). These are the pools from which CPE will get the IPs. IPAM assigns addresses dynamically by splitting address pools into smaller chunks. And then associating each chunk with a user-plane. The pools get freed up dynamically and re-allocated to different user-planes on need basis. 
+IPAM defines subscriber address pools for IPv4, IPv6 (NA) and IPv6 (PD). These are the pools from which CPE will get the IPs. IPAM assigns addresses dynamically by splitting address pools into smaller chunks and then associating each chunk with a user-plane. The pools get freed up dynamically and re-allocated to different user-planes on need basis. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -96,7 +94,7 @@ exit
 ```
 
 ### Profile DHCP
-Incase of PPPoE DS subscribers we will be using the DHCPv6 server to assign the IPv6 (IANA+IAPD) prefixes to CPE. For thsi example we will have cnBNG CP act as a DHCP server to assign IPv6 addresses to CPE/subscribers. In profile DHCP we define the DHCP server and which IPAM pool to use by default for subscriber. We can use different pools for IPv4, IPv6 (IANA) and IPv6 (IAPD). 
+Incase of PPPoE DS subscribers we will be using the DHCPv6 server to assign the IPv6 (IANA+IAPD) prefixes to CPE. For this tutorial we will have cnBNG CP act as a DHCP server to assign IPv6 addresses to CPE/subscribers. In profile DHCP we define the DHCP server and which IPAM pool to use by default for subscriber. We can use different pools for IPv4, IPv6 (IANA) and IPv6 (IAPD). 
 
 ```
 profile dhcp dhcp-server1
@@ -274,18 +272,11 @@ exit
 
 UP Configuration has mainly four constructs for cnBNG
 
-- Loopback for cnBNG CP-UP association
+- Association Configuration
 - DHCP Configuration
 - Access Interface
 - Feature definitions: QoS, ACL
 
-### Loopback Creation
-We need to create a Loopback for cnBNG use.
-
-```
-interface Loopback1
- ipv6 enable
-```
 
 ### Association Configuration
 
@@ -318,6 +309,13 @@ cnbng-nal location 0/RSP0/CPU0
 **Note**: cnBNG CP and UP doesnot require to be on same LAN, they need L3 connectivity for peering
 {: .notice--info}
 
+Loopback1 is used for ASR9k internal use for cnBNG.
+
+```
+interface Loopback1
+ ipv6 enable
+```
+
 ### DHCP Configuration
 This is where we associate access interfaces with cnBNG DHCP profile. cnBNG specific DHCP profile makes sure DHCP packets are punted to cnBNG CP through CPRi/GTP-u tunnel. Since PPPoE subscruibers use dhcp only for IPv6 address assignment, dhcp ipv4 profile is not needed for PPPoE subscribers.
 ```
@@ -340,7 +338,7 @@ interface Bundle-Ether1.102
 !
 ```
 
-**Note**: Thsi example uses ambiguous VLAN for access interface which allows 1:1 VLAN model. cnBNG also supports N:1 VLAN model for subscribers.
+**Note**: This example uses ambiguous VLAN for access interface which allows 1:1 VLAN model. cnBNG also supports N:1 VLAN model for subscribers.
 {: .notice--info}
 
 ## Radius Profile
