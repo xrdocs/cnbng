@@ -392,7 +392,7 @@ cisco Cleartext-Password:="cisco"
   Cisco-AVpair += "subscriber:ipv6_inacl=iACL_BNG_IPv6",
   cisco-avpair += "subscriber:sa=FT_Plan_100mbps",
   cisco-avpair += "ip:primary-dns=200.45.191.45",
-  cisco-avpair += "ip:secondary-dns=8.8.8.8",
+  cisco-avpair += "ip:secondary-dns=8.8.8.8"
 ```
 
 **Profile-2**: PPPoE LAC
