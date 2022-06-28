@@ -6,7 +6,7 @@ position: hidden
 ---
 ## Introduction
 
-In this tutorial we will learn how to bring-up a PPPoE LAC subscriber session in Cloud Native BNG (cnBNG). We will use IPCP to assign IPv4 address to the subscriber and DHCPv6 to assign IPv6 (NA) address to the subscriber.
+In this tutorial we will learn how to bring-up a PPPoE LAC subscriber session in Cloud Native BNG (cnBNG). 
 
 ## Topology
 In this tutorial we will be using setup as shown in figure 1. This setup uses Spirent to emulate client and L2TP Network Server (LNS). Spirent port 1/2 will be used for client emulation: PTA and LAC on same port. Which connects to the Access Network Provider ASR9k BNG UP node. LNS is emulated by Spirent port 1/1. When client tries to connect on ASR9k BNG UP, cnBNG CP authenticates the client with AAA server. Based on attribues received in Access Accept from Radius, client is either terminated as PTA session on cnBNG or as LAC session on cnBNG.
