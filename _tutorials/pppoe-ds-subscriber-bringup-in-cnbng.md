@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2022-02-14 18:03 +0530'
-title: PPPoE DS Subscriber Bringup in cnBNG
+title: PPPoE DS (DHCPv6) Subscriber Bringup in cnBNG
 author: Gurpreet Dhaliwal
 excerpt: >-
   Learn how to bring a PPPoE Dualstack session in this tutorial. This tutorial
