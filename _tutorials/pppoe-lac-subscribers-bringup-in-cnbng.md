@@ -232,7 +232,7 @@ This profile defines the l2tp parameters for LAC sessions. L2TP Tunnel source an
 <code>
 profile l2tp lac-1
  mode                  lac
- <mark>!!! This is the hostname which will be used for tunnel authentication</mark>
+ <mark>!!! This is hostname which will be used for tunnel authentication</mark>
  hostname              lns.cisco.com
  hello-interval        600
  retransmit initial timeout max 8
@@ -248,12 +248,12 @@ profile l2tp lac-1
  tx-connect-speed      100000
  rx-connect-speed      100000
  tunnel-load-balancing equal
- <mark>!!! This is the password which will be used for tunnel authentication</mark>
+ <mark>!!! This is password which will be used for tunnel authentication</mark>
  password             cisco
  ipv4 df-bit reflect
- <mark>!!! This is the tunnel source IP, usually this is the loopback IP of ASR9k UP which is reachable from LNS</mark>
+ <mark>!!! This is tunnel source IP, usually this is the loopback IP of ASR9k UP which is reachable from LNS</mark>
  ipv4 source 172.0.0.2
- <mark>!!! This is the tunnel destination IP reachable from ASR9k UP and is the IP of LNS</mark>
+ <mark>!!! This is tunnel destination IP reachable from ASR9k UP and is the IP of LNS</mark>
  ipv4 destination 200.200.210.1
 exit
 </code>
