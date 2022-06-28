@@ -16,6 +16,8 @@ tags:
   - cups bng
   - tr-459
 ---
+{% include toc %}
+
 ## Introduction
 
 In this tutorial we will learn how to bring-up PPPoE LAC subscriber session in Cloud Native BNG (cnBNG). We will configure this lab to have both LAC and PTA sessions on same access interface. Whether the session is PTA or it is LAC will be decided by Radius attributes sent during auth. 
