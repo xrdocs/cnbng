@@ -154,7 +154,7 @@ exit
  "\n     network:\n        version: 2\n        ethernets:\n            ens192:\n                dhcp4: false\n                addresses:\n                - { {K8S_SSH_IP}}/24\n                routes:\n                - to: 0.0.0.0/0\n                  via: your-gateway-ip\n                nameservers:\n                    addresses:\n                    - your-dns1\n                    - your-dns2\n                    search:\n                    - your-domain\n\n\n"
 ```
 
-**Note**: You can use following command to replace line breaks:
+**Note**: You can use following command to replace line breaks:\n
 sed -z 's/\n/\\n/g' netplan.yaml
 {: .notice--info}
 
