@@ -7,7 +7,7 @@ author: Gurpreet Dhaliwal
 ---
 ## Introduction
 
-In this tutorial we will learn how to bring-up a PPPoE LAC subscriber session in Cloud Native BNG (cnBNG). 
+In this tutorial we will learn how to bring-up PPPoE LAC subscriber session in Cloud Native BNG (cnBNG). We will configure this lab to have both LAC and PTA sessions on same access interface. Whether the session is PTA or it is LAC will be decided by Radius attributes sent during auth. 
 
 ## Topology
 The setup used for this tutorial is shown in figure 1. This setup uses Spirent to emulate client and L2TP Network Server (LNS). Spirent port 1/2 will be used for client emulation: PTA and LAC on same port. Which connects to the Access Network Provider ASR9k BNG UP node. LNS is emulated by Spirent port 1/1. When client tries to connect on ASR9k BNG UP, cnBNG CP authenticates the client with AAA server. Based on attribues received in Access Accept from Radius, client is either terminated as PTA session on cnBNG or as LAC session on cnBNG.
@@ -16,10 +16,10 @@ The setup used for this tutorial is shown in figure 1. This setup uses Spirent t
 
 ## cnBNG CP Configuration
 
-cnBNG CP Configuration has following constructs/parts:
-- IPAM
+cnBNG CP Configuration has following constructs/parts for PPPoE:
+- IPAM (applicable for PTA only)
 - Profile PPPoE
-- Profile DHCP
+- Profile DHCP (applicable for PTA only)
 - Profile AAA
 - Profile Radius
 - Profile Feature-Template
@@ -30,7 +30,7 @@ cnBNG CP Configuration has following constructs/parts:
 Let's understand each one step-by-step and apply in Ops Center in config mode.
 
 ### IPAM
-This is where we define subscriber address pools for IPv4, IPv6 (NA) and IPv6 (PD). These are the pools from which CPE will get the IPs. IPAM assigns addresses dynamically by splitting address pools into smaller chunks. And then associating each chunk with a user-plane. The pools get freed up dynamically and re-allocated to different user-planes on need basis. 
+This is optional for PPPoE LAC only profile. IPAM defines subscriber address pools for IPv4, IPv6 (NA) and IPv6 (PD). These are the pools from which PPPoE PTA CPE will get the IPs. IPAM assigns addresses dynamically by splitting address pools into smaller chunks and then associating each chunk with a user-plane. The pools get freed up dynamically and re-allocated to different user-planes on need basis. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -80,7 +80,7 @@ exit
 ```
 
 ### Profile DHCP
-Incase of PPPoE DS PTA subscribers we will be using the DHCPv6 server to assign the IPv6 (IANA+IAPD) prefixes to CPE. For thsi example we will have cnBNG CP act as a DHCP server to assign IPv6 addresses to CPE/subscribers. In profile DHCP we define the DHCP server and which IPAM pool to use by default for subscriber. We can use different pools for IPv4, IPv6 (IANA) and IPv6 (IAPD). 
+Incase of PPPoE DS PTA subscribers we will be using the DHCPv6 server to assign the IPv6 (IANA+IAPD) prefixes to CPE. For this example we will have cnBNG CP act as a DHCP server to assign IPv6 addresses to CPE/subscribers. In profile DHCP we define the DHCP server and which IPAM pool to use by default for subscriber. We can use different pools for IPv4, IPv6 (IANA) and IPv6 (IAPD). 
 
 ```
 profile dhcp dhcp-server1
@@ -103,7 +103,7 @@ profile dhcp dhcp-server1
 exit
 ```
 
-**Note**: The definition of IPv4 server profile is not needed for PPPoE subscribers. For PPPoE subscribers IPv4 address will be assigned by IPCP and from IPAM directly.
+**Note**: The definition of IPv4 server profile is not needed for PPPoE subscribers. For PPPoE subscribers IPv4 addresses will be assigned by IPCP using IPAM directly.
 {: .notice--info}
 
 ### Profile AAA
@@ -189,7 +189,7 @@ profile feature-template pppoe-1
  exit
  ppp
   authentication [ pap chap ]
-  <mark>!!! will use IPAM pool-ISP1 for IPv4 address assignment using IPCP</mark>
+  <mark>!!! will use IPAM pool-ISP1 for IPv4 address assignment using IPCP, this is not required for LAC only profile</mark>
   ipcp peer-address-pool <mark>pool-ISP1</mark>
   ipcp renegotiation ignore
   ipv6cp renegotiation ignore
@@ -221,28 +221,18 @@ exit
 **Note**: In above policy-map PM_Plan_100mbps_input and PM_Plan_100mbps_output are expected to be defined on userplane.
 {: .notice--info}
 
-### Profile Subscriber
-This profile can be attached on per access port level or per user-plane level. This profile for PPPoE defines which dhcp server profile to apply for IPv6 address assignment, along with feature-template, pppoe-profile and aaa-profile to be used for auth/acct. 
-
-```
-profile subscriber subscriber-profile_pppoe-1
- dhcp-profile               dhcp-server1
- pppoe-profile              ppp1
- session-type               ipv4v6
- l2tp-profile               lac-1
- activate-feature-templates [ pppoe-1 ]
- event session-activate
-  aaa authenticate aaa_pppoe
- exit
-exit
-```
+**Note**: cnBNG currently doesnot support QoS policies for LAC sessions. These policies are expected to be applied on LNS. 
+{: .notice--info}
 
 ## Profile L2TP
-This profile defines the l2tp parameters. Tunnel source and destination Ips, authentication parameters etc. 
+This profile defines the l2tp parameters for LAC sessions. L2TP Tunnel source and destination IPs along with authentication and other parameters are defined under this profile.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 profile l2tp lac-1
  mode                  lac
+ <mark>!!! This is the hostname which will be used for tunnel authentication</mark>
  hostname              lns.cisco.com
  hello-interval        600
  retransmit initial timeout max 8
@@ -258,10 +248,31 @@ profile l2tp lac-1
  tx-connect-speed      100000
  rx-connect-speed      100000
  tunnel-load-balancing equal
+ <mark>!!! This is the password which will be used for tunnel authentication</mark>
  password             cisco
  ipv4 df-bit reflect
+ <mark>!!! This is the tunnel source IP, usually this is the loopback IP of ASR9k UP which is reachable from LNS</mark>
  ipv4 source 172.0.0.2
+ <mark>!!! This is the tunnel destination IP reachable from ASR9k UP and is the IP of LNS</mark>
  ipv4 destination 200.200.210.1
+exit
+</code>
+</pre>
+</div>
+
+### Profile Subscriber
+This profile can be attached on per access port level or per user-plane level. This profile for PPPoE defines which dhcp server profile to apply for IPv6 address assignment, along with feature-template, pppoe-profile and aaa-profile to be used for auth/acct. 
+
+```
+profile subscriber subscriber-profile_pppoe-1
+ dhcp-profile               dhcp-server1
+ pppoe-profile              ppp1
+ session-type               ipv4v6
+ l2tp-profile               lac-1
+ activate-feature-templates [ pppoe-1 ]
+ event session-activate
+  aaa authenticate aaa_pppoe
+ exit
 exit
 ```
 
@@ -293,7 +304,7 @@ UP Configuration has mainly four constructs for cnBNG
 - Feature definitions: QoS, ACL
 
 ### Association Configuration
-This is where we define association settings between cnBNG CP and UP. The auto-loopback with "secondary-address-upadte enable" will allow dynamic IP address allocations using IPAM. 
+This is where we define association settings between cnBNG CP and UP. The auto-loopback with "secondary-address-upadte enable" will allow dynamic IP address allocations using IPAM for PTA sessions. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -323,7 +334,7 @@ cnbng-nal location 0/RSP0/CPU0
 **Note**: cnBNG CP and UP doesnot require to be on same LAN, they need L3 connectivity for peering
 {: .notice--info}
 
-We need to create a Loopback for cnBNG use also.
+We need to create a Loopback for cnBNG internal use on ASR9k.
 
 ```
 interface Loopback1
@@ -332,7 +343,7 @@ interface Loopback1
 
 
 ### DHCP Configuration
-This is where we associate access interfaces with cnBNG DHCP profile. cnBNG specific DHCP profile makes sure DHCP packets are punted to cnBNG CP through CPRi/GTP-u tunnel. Since PPPoE subscruibers use dhcp only for IPv6 address assignment, dhcp ipv4 profile is not needed for PPPoE subscribers.
+This is where we associate access interfaces with cnBNG DHCP profile. cnBNG specific DHCP profile makes sure DHCP packets are punted to cnBNG CP through CPRi/GTP-u tunnel. Since PPPoE PTA subscribers use IPCP for IPv4 address assignment, dhcp ipv4 profile is not needed for PPPoE PTA subscribers.
 ```
 dhcp ipv6
  profile cnbng_v6 cnbng
@@ -353,12 +364,13 @@ interface Bundle-Ether1.102
 !
 ```
 
-**Note**: Thsi example uses ambiguous VLAN for access interface which allows 1:1 VLAN model. cnBNG also supports N:1 VLAN model for subscribers.
+**Note**: This example uses ambiguous VLAN for access interface which allows 1:1 VLAN model. cnBNG also supports N:1 VLAN model for subscribers.
 {: .notice--info}
 
 ## Radius Profile
-Following is Freeradius profile used in this tutorial
+Following are Freeradius profiles used in this tutorial. Profile-1 is for PPPoE PTA session and Profile-2 is for PPPoE LAC session.
 
+**Profile-1**: PPPoE PTA
 ```
 cisco Cleartext-Password:="cisco"
   cisco-avpair += "subscriber:inacl=iACL_BNG_IPv4",
@@ -374,8 +386,7 @@ cisco Cleartext-Password:="cisco"
 #  Filter-Id += "arnet_acl5.in"
 ```
 
-For L2TP LAC subscriber
-
+**Profile-2**: PPPoE LAC
 ```
 cisco-lac Cleartext-Password:="cisco"
     Framed-Protocol=PPP,
@@ -385,6 +396,7 @@ cisco-lac Cleartext-Password:="cisco"
     Tunnel-Client-Endpoint=":1:172.0.0.2",
     Tunnel-Server-Endpoint=":1:200.200.210.1"
 ```
+
 ## Verifications
 
 - Verfiy that the cnBNG CP-UP association is up and Active on cnBNG CP ops-center
@@ -443,7 +455,7 @@ Control-Plane configurations:
 </pre>
 </div>
 
-- Verify subscriber session is up on cnBNG CP ops-center
+- Verify subscriber sessions are up on cnBNG CP ops-center
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -460,11 +472,11 @@ subscriber-details
             "16777229@sm",
             "acct-sess-id:cnbng-tme-lab_DC_16777229@sm",
             "upf:ASR9k-1",
-            "port-id:ASR9k-1/Bundle-Ether1.102",
+            "port-id:ASR9k-1/<mark>Bundle-Ether1.102"</mark>,
             "feat-template:pppoe-1",
             "type:sessmgr",
             "mac:0010.9401.0001",
-            "sesstype:lac",
+            <mark>"sesstype:lac"</mark>,
             "smupstate:smUpSessionCreated",
             "up-subs-id:ASR9k-1/2148182752",
             "smstate:established"
@@ -479,11 +491,11 @@ subscriber-details
             "16777230@sm",
             "acct-sess-id:cnbng-tme-lab_DC_16777230@sm",
             "upf:ASR9k-1",
-            "port-id:ASR9k-1/Bundle-Ether1.102",
+            "port-id:ASR9k-1/<mark>Bundle-Ether1.102"</mark>,
             "feat-template:pppoe-1",
             "type:sessmgr",
             "mac:0010.9402.0001",
-            "sesstype:ppp",
+            <mark>"sesstype:ppp"</mark>,
             "feat-template:FT_Plan_100mbps",
             "smupstate:smUpSessionCreated",
             "up-subs-id:ASR9k-1/2148182768",
@@ -549,9 +561,6 @@ end
 </code>
 </pre>
 </div>
-
-**Note**: "show subscriber running-config" is the same CLI used on ASR9k integrated BNG, so ignore- Suffix indicates the configuration item can be added by aaa server only, from the output as there is no direct interaction of cnBNG UP with AAA.
-{: .notice--info}
 
 **Note**: The ACL and QoS policies applied on subscriber interface must be defined on ASR9k (cnBNG UP), prior to subscriber session bring-up.
 {: .notice--info}
