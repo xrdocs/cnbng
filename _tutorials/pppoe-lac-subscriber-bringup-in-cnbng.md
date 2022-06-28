@@ -237,7 +237,7 @@ exit
 **Note**: cnBNG currently doesnot support QoS policies for LAC sessions. These policies are expected to be applied on LNS. 
 {: .notice--info}
 
-## Profile L2TP
+### Profile L2TP
 This profile defines the l2tp parameters for LAC sessions. L2TP Tunnel source and destination IPs along with authentication and other parameters are defined under this profile.
 
 <div class="highlighter-rouge">
