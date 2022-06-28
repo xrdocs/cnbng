@@ -211,7 +211,7 @@ drwxrwxr-x 3 cloud-user cloud-user 4096 Apr 12 21:07 .
 </pre>
 </div>
   
-- Run the deploy command as shown below. External-ip is the IP address of the management interface, we will be accessing the CLI and Netconf interface to SMI Cluster Deployer using this IP. It will be used to host your ISO and your offline file tars to be downloaded to the remote hosts
+- Run the deploy command as shown below. External-ip is the IP address from K8s Network configured on Inception VM. It will be used to host your ISO and your offline file tars to be downloaded to the remote hosts
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -237,6 +237,9 @@ API: https://restconf.172.22.18.55.nip.io</mark>
 </code>
 </pre>
 </div>
+  
+**Note2:** Rerun of deploy utility doesnot work/ fix issues with previous deployment. It's always a good idea to clean up containers manually and before attemting to rerun ./deploy
+{: .notice--info}
   
 ## Verifications
 - We can login to the SMI Cluster Deployer CLI, using "ssh admin@localhost -p 2022" on Inception VM
