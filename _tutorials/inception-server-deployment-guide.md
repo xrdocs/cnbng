@@ -238,7 +238,7 @@ API: https://restconf.172.22.18.55.nip.io</mark>
 </pre>
 </div>
   
-**Note2:** Rerun of deploy utility doesnot work/ fix issues with previous deployment. It's always a good idea to clean up containers manually and before attemting to rerun ./deploy
+**Note:** Rerun of deploy utility doesnot work/ fix issues with previous deployment. It's always a good idea to clean up containers manually and before attemting to rerun ./deploy
 {: .notice--info}
   
 ## Verifications
@@ -309,5 +309,5 @@ admin@localhost's password:
 <session-id>278399</session-id></hello>]]>]]>
 ```
   
-**Note2:** You can exit from netconf prompt using ctrl+C
+**Note:** You can exit from netconf prompt using ctrl+C
 {: .notice--info}
