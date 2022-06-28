@@ -1,7 +1,7 @@
 ---
 published: false
 date: '2022-06-28 15:48 +0530'
-title: PPPoE LAC Subscribers Bringup
+title: PPPoE LAC DS (DHCPv6) Subscribers Bringup
 position: hidden
 ---
 ## A New Post
