@@ -384,17 +384,13 @@ Following are Freeradius profiles used in this tutorial. Profile-1 is for PPPoE 
 **Profile-1**: PPPoE PTA
 ```
 cisco Cleartext-Password:="cisco"
+  Framed-protocol += "PPP",
+  Service-Type += "Framed",
   cisco-avpair += "subscriber:inacl=iACL_BNG_IPv4",
   Cisco-AVpair += "subscriber:ipv6_inacl=iACL_BNG_IPv6",
   cisco-avpair += "subscriber:sa=FT_Plan_100mbps",
   cisco-avpair += "ip:primary-dns=200.45.191.45",
   cisco-avpair += "ip:secondary-dns=8.8.8.8",
-  Class += 636369702d7465636f3a657844534c2c6861636365736f2c69666962657274656c2c6e41726e65745f506f7274616c5f4361757469766f2c73504f5254414c5f52454348415a4f532c772f2c76462c7950432d
-303031i,
-  Framed-protocol += "PPP",
-  Service-Type += "Framed",
-  Session-timeout += 21600
-#  Filter-Id += "arnet_acl5.in"
 ```
 
 **Profile-2**: PPPoE LAC
