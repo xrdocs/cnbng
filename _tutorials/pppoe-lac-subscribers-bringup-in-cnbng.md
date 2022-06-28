@@ -2,8 +2,19 @@
 published: true
 date: '2022-06-28 15:48 +0530'
 title: PPPoE LAC Subscribers Bringup in cnBNG
-position: hidden
+position: top
 author: Gurpreet Dhaliwal
+excerpt: >-
+  Learn how to bring PPPoE LAC sessions in this tutorial. This tutorial also
+  brings up PPPoE PTA sessions on same access interface.
+tags:
+  - cnbng
+  - cloud native bng
+  - lac
+  - pppoe
+  - wholesale
+  - cups bng
+  - tr-459
 ---
 ## Introduction
 
