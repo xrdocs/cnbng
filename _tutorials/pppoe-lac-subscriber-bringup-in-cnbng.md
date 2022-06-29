@@ -27,6 +27,23 @@ The setup used for this tutorial is shown in figure 1. This setup uses Spirent t
 
 ![lac-topo.png]({{site.baseurl}}/images/lac-topo.png)
 
+## Prerequisite
+Make sure l2tp-tunnel endpoint is configured in cnBNG CP Ops-Center and the corresponding POD is running for LAC sessions to work.
+
+```
+instance instance-id 1
+ endpoint l2tp-tunnel
+ exit
+exit
+```
+
+Verify l2tp-tunnel POD is running on K8s Master VM:
+
+```
+cisco@cnbng-tme-lab-aio-cp:~$ kubectl get pods -n bng-bng | grep l2tp
+bng-l2tp-tunnel-n0-0                                   1/1     Running   1          22h
+```
+
 ## cnBNG CP Configuration
 
 cnBNG CP Configuration has following constructs/parts for PPPoE:
