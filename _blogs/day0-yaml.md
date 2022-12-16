@@ -5,7 +5,9 @@ title: day0_yaml
 hidden: true
 position: hidden
 ---
-'''
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
 images:
     bng:
       name: bng.2022.04.0
@@ -52,4 +54,6 @@ smi_deployer:
   ip: 192.168.107.174
   user: 'admin'
   password: 'Cisco@123'
-  '''
+</code>
+</pre>
+</div>
