@@ -8,7 +8,7 @@ position: hidden
 <div class="highlighter-rouge">
 <pre class="highlight">
 <code>
-images:
+<mark>images:</mark>
     bng:
       name: bng.2022.04.0
       url: http://192.168.107.152/images-2022/cnbng-cp/bng.2022.04.0.SPA.tgz
@@ -19,7 +19,7 @@ images:
       url: http://192.168.107.152/images-2022/cnbng-cp/cee-2022.02.1.i08.tar
       sha256: bbff1b7d1f66595c0ffa399e7ae58884e1b1a8c5a61e19398006c53ab3f635b0
 
-vcenter_server:
+<mark>vcenter_server:</mark>
   ip: 192.168.107.146
   user: administrator@cnbng.com
   password: Bgl16dlab@!23
@@ -29,11 +29,11 @@ vcenter_server:
   datastore: C1S1Datastore
   nic: VM Network
 
-cnbng_cp:
+<mark>cnbng_cp:</mark>
   cluster:
-     name: demo-cp
-     ntp: ntp.esl.cisco.com
-     istio: 'false'
+     name: <mark>demo-cp</mark>
+     ntp: <mark>ntp.esl.cisco.com</mark>
+     istio: <mark>'false'</mark>
      cee_ops_center:
         ssh_port: 2023
         netconf_port: 3024
@@ -41,16 +41,16 @@ cnbng_cp:
         ssh_port: 2024
         netconf_port: 3022
   node_vm:
-    ip: 192.168.107.163
-    gateway: 192.168.107.129
-    dns: 64.104.128.236
-    domain: cisco.com
+    ip: <mark>192.168.107.163</mark>
+    gateway: <mark>192.168.107.129</mark>
+    dns: <mark>64.104.128.236</mark>
+    domain: <mark>cisco.com</mark>
     sizing:
       vcpu: 16
       memory: 32768
       storage_gb: 300
 
-smi_deployer:
+<mark>smi_deployer:</mark>
   ip: 192.168.107.174
   user: 'admin'
   password: 'Cisco@123'
