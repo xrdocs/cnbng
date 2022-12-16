@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2022-12-16 18:02 +0530'
-title: day0_yaml
+title: Day0 AIO YAML
 hidden: true
 position: hidden
 ---
