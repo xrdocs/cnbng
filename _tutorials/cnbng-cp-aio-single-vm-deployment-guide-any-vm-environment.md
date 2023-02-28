@@ -15,8 +15,8 @@ cnBNG Control Plane deployment in single VM in any NFVI environment where cnBNG 
 
 For AIO deployment following steps are followed:
 	1. Inception Server Cluster Manager deployment
-	2. Base ISO Ubuntu VM deployment for cnBNG CP
-	3. cnBNG CP base ISO Ubuntu OS customizations
-	4. SSH Key generation
-	5. SMI, CEE and cnBNG CP deployment using SMI Deployer
+	1. Base ISO Ubuntu VM deployment for cnBNG CP
+	1. cnBNG CP base ISO Ubuntu OS customizations
+	1. SSH Key generation
+	1. SMI, CEE and cnBNG CP deployment using SMI Deployer
 
