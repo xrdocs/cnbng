@@ -80,11 +80,11 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
 
 1. SSH login to cnBNG CP AIO Ubuntu VM which was deployed in Step-2
 1. Now change the hostname of the VM to: <your-cnbng-cp-cluster>-aio, using:
-	```
-		sudo hostnamectl set-hostname <your-cnbng-cp-cluster>-aio
-	e.g.
-		sudo hostnamectl set-hostname cnbng-cp-lab1-aio
-	```
+```
+sudo hostnamectl set-hostname <your-cnbng-cp-cluster>-aio
+e.g.
+sudo hostnamectl set-hostname cnbng-cp-lab1-aio
+```
 1. Logout of the VM and login again to see hostname changes are reflected
 1. Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present
 1. (optional) Replace default hostname for VM with the one you set into /etc/hosts file
@@ -92,17 +92,17 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
 1. SSH Key Generation
 	1. SSH Login to Inception VM
 	1. Generate SSH key using: 
-    ```
-		ssh-keygen -t rsa
-    ```
+```
+	ssh-keygen -t rsa
+```
 	1. Run ssh-copy-id command, which will copy ssh keys to Base ISO Ubuntu Image for cnBNG CP AIO e.g.
-    ```
-		ssh-copy-id cloud-user@192.168.107.166
-    ```
+```
+	ssh-copy-id cloud-user@192.168.107.166
+```
 	1. Verify that the login using keys is working by logging to cnBNG CP AIO VM
-    ```
-		ssh cloud-user@192.168.107.166
-    ```
+```
+	ssh cloud-user@192.168.107.166
+```
 
 ## Step 4: SMI, CEE and cnBNG CP deployment using SMI Deployer
 
@@ -110,21 +110,21 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
 1. Note down ssh keys in a file from .ssh/id_rsa (private) and ./ssh/id_rsa.pub (public)
 1. Remove line breaks from private key and replace them with string "\n"
 1. Login to SMI Cluster Deployer or Cluster Manager on inception VM:
-   ```
+```
 	ssh admin@localhost -p 2022
-   ```
+```
 1. Create environment configs:
-   ```
-	environments manual
-	   manual
-	exit
-   ```
+```
+environments manual
+	manual
+exit
+```
 1. Create Cluster configs:
 <div class="highlighter-rouge">
 <pre class="highlight">
 <code>
-  clusters cnbng
-   environment manual
+clusters cnbng
+ environment manual
  addons ingress bind-ip-address 192.168.107.166
  addons ingress enabled
  addons istio enabled
@@ -141,13 +141,13 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
  
  node-defaults os ntp enabled
  node-defaults os ntp servers <mark>clock.cisco.com</mark>
- exit
-  ```
+exit
+```
 In the above config, change ntp server to the one available in the lab. Also netplan should be as per the netplan configured in the VM. 
 {: .notice--info}
   
 1. Create AIO Node config:
-  ```
+```
 clusters cnbng
  nodes cp
   k8s node-type master
@@ -160,7 +160,7 @@ clusters cnbng
   initial-boot default-user-password <<your-password>>
  exit
 exit
-  ```
+```
 1. Setup software repository for CEE and cnBNG CP
 ```
 software cnf bng
@@ -176,7 +176,7 @@ software cnf cee
 exit
 ```
 1. Setup Ops Center configs inside cluster for cnBNG
-  ```
+```
 ops-centers bng bng
   repository-local        bng
   sync-default-repository true
@@ -189,8 +189,8 @@ ops-centers bng bng
   initial-boot-parameters first-boot-password <<your password>>
   initial-boot-parameters auto-deploy false
   initial-boot-parameters single-node true
- exit
- ops-centers cee global
+exit
+ops-centers cee global
   repository-local        cee
   sync-default-repository true
   netconf-ip              192.168.107.166
@@ -202,16 +202,16 @@ ops-centers bng bng
   initial-boot-parameters first-boot-password <<your password>>
   initial-boot-parameters auto-deploy true
   initial-boot-parameters single-node true
- exit
-  ```
+exit
+```
 1. Deploy cnBNG CP cluster using cluster sync command:
-  ```
+```
 clusters cnbng-cp-lab1 actions sync run debug true 
 ```	
 Monitor sync using monitor command:
-  ```
+```
 monitor sync-logs cnbng-cp-lab1
-  ```
+```
   
 
 
