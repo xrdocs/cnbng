@@ -9,17 +9,17 @@ tags:
 ---
 
 cnBNG Control Plane deployment in single VM in any NFVI environment is called as cnBNG CP AIO Manual Deployment. In this deployment cnBNG Control Plane is deployed in a single customized Ubuntu VM. This Ubuntu VM is pre-deployed using SMI base iso image and hence the deployment is called as semi automated or manual. Following are included in this deployment:
-	- SMI cluster (Cisco CaaS)
-	- CEE application (Application Infrastructure for Monitoring and Alerting)
-	- cnBNG Control Plane application (Control Plane application for Cisco CUPS BNG)
+- SMI cluster (Cisco CaaS)
+- CEE application (Application Infrastructure for Monitoring and Alerting)
+- cnBNG Control Plane application (Control Plane application for Cisco CUPS BNG)
     
 This is to be noted that only SMI Ubuntu VM deployment in NFVI environment is manual, rest of the process to deploy SMI, CEE and cnBNG Control Plane is fully automated through SMI Deployer or Cluster Manager. 
 
 For AIO deployment following steps are followed:
-	1. Inception Server Cluster Manager deployment
-	1. Base ISO Ubuntu VM deployment for cnBNG CP
-	1. cnBNG CP base ISO Ubuntu OS customizations
-	1. SMI, CEE and cnBNG CP deployment using SMI Deployer
+1. Inception Server Cluster Manager deployment
+1. Base ISO Ubuntu VM deployment for cnBNG CP
+1. cnBNG CP base ISO Ubuntu OS customizations
+1. SMI, CEE and cnBNG CP deployment using SMI Deployer
 
 ## Networking
 
@@ -36,21 +36,21 @@ Refer to [Inception Server Deployment Guide](https://xrdocs.io/cnbng/tutorials/i
 
 SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a given NFVI environement. This procedure is fairly straight forward and simple. To give an idea on how the deployment of VM works following are the manual steps to deploy the VM in VMWare vCenter. Procedure to deploy the VM may differ based on the chosen NFVI environment. 
 
-	1. Download the SMI Base ISO file and copy the file to the VM Datastore
-	1. In the vCenter, select "Create a New Virtual Machine"
-	1. Specify name of the VM and select the Datacenter
-	1. Next select the host for the VM
-	1. Select the datastore 
-	1. Select compatibility (ESXi 6.7 or later)
-	1. Select guest OS: Guest Family- Linux, Guest OS Version- Ubuntu Linux (64-bit)
-	1. Customize Hardware:
-		2. vCPU: 8, Memory: 16GB, New Hard disk: 100Gb
-		2. Under Network: select management network ("VM Network" in most cases
-		2. Click New CD/DVD Drive and do the following:
-			3. Select Datastore ISO file option to boot from the SMI Base .iso file. Browse to the location of the .iso file on the datastore set in Step 1.
-			3. In the Device Status field, select Connect at power on checkbox.
-	1. After the VM boots up: login to the VM (user: cloud_user, password: Cisco_123). You will be prompted to change the password immediately
-	1. Now setup Networking by editing /etc/netplan/50-cloud-init.yaml file. Here is a sample file config:
+1. Download the SMI Base ISO file and copy the file to the VM Datastore
+1. In the vCenter, select "Create a New Virtual Machine"
+1. Specify name of the VM and select the Datacenter
+1. Next select the host for the VM
+1. Select the datastore 
+1. Select compatibility (ESXi 6.7 or later)
+1. Select guest OS: Guest Family- Linux, Guest OS Version- Ubuntu Linux (64-bit)
+1. Customize Hardware:
+	1. vCPU: 8, Memory: 16GB, New Hard disk: 100Gb
+	1. Under Network: select management network ("VM Network" in most cases
+	1. Click New CD/DVD Drive and do the following:
+		1. Select Datastore ISO file option to boot from the SMI Base .iso file. Browse to the location of the .iso file on the datastore set in Step 1.
+		1. In the Device Status field, select Connect at power on checkbox.
+1. After the VM boots up: login to the VM (user: cloud_user, password: Cisco_123). You will be prompted to change the password immediately
+1. Now setup Networking by editing /etc/netplan/50-cloud-init.yaml file. Here is a sample file config:
 ```
 	network:
 	    ethernets:
@@ -77,8 +77,8 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
 
 ## Step 3: Base ISO Ubuntu OS customization
 
-	1. SSH login to cnBNG CP AIO Ubuntu VM which was deployed in Step-2
-	1. Now change the hostname of the VM to: <your-cnbng-cp-cluster>-aio, using:
+1. SSH login to cnBNG CP AIO Ubuntu VM which was deployed in Step-2
+1. Now change the hostname of the VM to: <your-cnbng-cp-cluster>-aio, using:
     ```
 		sudo hostnamectl set-hostname <your-cnbng-cp-cluster>-aio
     ```
@@ -86,12 +86,12 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
     ```
 		sudo hostnamectl set-hostname cnbng-cp-lab1-aio
     ```
-	1. Logout of the VM and login again to see hostname changes are reflected
-	1. Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present.
-	1. (optional) Replace default hostname for VM with the one you set into /etc/hosts file
-	1. Verify that the hostname is persistent even after reboot of the VM
-	1. SSH Key Generation
-    2. SSH Login to Inception VM
+1. Logout of the VM and login again to see hostname changes are reflected
+1. Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present
+1. (optional) Replace default hostname for VM with the one you set into /etc/hosts file
+1. Verify that the hostname is persistent even after reboot of the VM
+1. SSH Key Generation
+	1. SSH Login to Inception VM
 	2. Generate SSH key using: 
     ```
 		ssh-keygen -t rsa
