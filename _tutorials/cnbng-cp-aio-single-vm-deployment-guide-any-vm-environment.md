@@ -8,10 +8,12 @@ tags:
   - cse
 ---
 
-cnBNG Control Plane deployment in single VM in any NFVI environment where cnBNG CP VM is pre-deployed is called as cnBNG CP AIO Manual Deployment. This is a single VM deployment for cnBNG Control Plane in a customized Ubuntu VM (provided by SMI) and includes following:
-	- SMI cluster (Cisco K8s Distribution)
+cnBNG Control Plane deployment in single VM in any NFVI environment is called as cnBNG CP AIO Manual Deployment. In this deployment cnBNG Control Plane is deployed in a single customized Ubuntu VM. This Ubuntu VM is pre-deployed using SMI base iso image and hence the deployment is called as semi automated or manual. Following are included in this deployment:
+	- SMI cluster (Cisco CaaS)
 	- CEE application (Application Infrastructure for Monitoring and Alerting)
-	- cnBNG Control Plane application (Control Plane application for BNG)
+	- cnBNG Control Plane application (Control Plane application for Cisco CUPS BNG)
+    
+This is to be noted that only SMI Ubuntu VM deployment in NFVI environment is manual, rest of the process to deploy SMI, CEE and cnBNG Control Plane is fully automated through SMI Deployer or Cluster Manager. 
 
 For AIO deployment following steps are followed:
 	1. Inception Server Cluster Manager deployment
@@ -20,3 +22,8 @@ For AIO deployment following steps are followed:
 	1. SSH Key generation
 	1. SMI, CEE and cnBNG CP deployment using SMI Deployer
 
+Prerequisites: 
+	- Inception Server (SMI Deployer) is pre deployed
+	- cnBNG CP VM is pre-deployed using SMI Base ISO image
+
+Step 1: Inception CM Deployment
