@@ -26,7 +26,7 @@ For AIO deployment following steps are followed:
 ![aio-networking1.png]({{site.baseurl}}/images/aio-networking1.png)
 
 ## Prerequisites: 
-	- Inception Server (SMI Deployer)
+- Inception Server (SMI Deployer)
 
 ## Step 1: Deploying Inception VM and Installing SMI Deployer
 
