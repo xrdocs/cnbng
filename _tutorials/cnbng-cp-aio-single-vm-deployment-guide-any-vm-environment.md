@@ -79,13 +79,11 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
 
 1. SSH login to cnBNG CP AIO Ubuntu VM which was deployed in Step-2
 1. Now change the hostname of the VM to: <your-cnbng-cp-cluster>-aio, using:
-    ```
+	```
 		sudo hostnamectl set-hostname <your-cnbng-cp-cluster>-aio
-    ```
-	E.g.
-    ```
+	e.g.
 		sudo hostnamectl set-hostname cnbng-cp-lab1-aio
-    ```
+	```
 1. Logout of the VM and login again to see hostname changes are reflected
 1. Make the hostname persistent even after reload by adding "preserve_hostname: true" to /etc/cloud/cloud.cfg file if not added already or change the setting to true from false if already present
 1. (optional) Replace default hostname for VM with the one you set into /etc/hosts file
