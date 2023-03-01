@@ -111,123 +111,124 @@ sudo hostnamectl set-hostname cnbng-cp-lab1-aio
 1. Note down ssh keys in a file from .ssh/id_rsa (private) and ./ssh/id_rsa.pub (public)
 1. Remove line breaks from private key and replace them with string "\n"
 1. Login to SMI Cluster Deployer or Cluster Manager on inception VM:
-```
+	```
 	ssh admin@localhost -p 2022
-```
+	```
 1. Create environment configs:
-```
-environments manual
-	manual
-exit
-```
+	```
+	environments manual
+		manual
+	exit
+	```
 1. Create Cluster configs:
-<div class="highlighter-rouge">
-<pre class="highlight">
-<code>
-clusters cnbng
- environment manual
- addons ingress bind-ip-address 192.168.107.166
- addons ingress enabled
- addons istio enabled
- configuration master-virtual-ip 192.168.107.166
- configuration master-virtual-ip-interface ens160
- configuration pod-subnet    192.202.0.0/16
- configuration allow-insecure-registry true
- node-defaults initial-boot default-user cisco
- node-defaults initial-boot default-user-ssh-public-key <mark>"ssh public key from step-2"</mark>
- node-defaults k8s ssh-username cloud-user
- node-defaults k8s ssh-connection-private-key "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAtuZ56pW6nMf0e8ZMAjsKnj89YIpEfVyZ31GkrqObUua70egN\nOqDdWF8ToUHQrPnwDP/E4BplhtdiP2n/Dq8e9Xf8GRHX6KNXC6dhl5c6MKaBoh5A\nRDj8aVEfRfoDwpp5L0clg01EP0IIqkTIrSqScAheNfiKSptE5OleDS4I4mxfZsDR\nKnhAOtjgU/aHNGFDt1rYJ+QifAcp97ouyiNfsUsJwifLwBN3/EisbTH3rD0Z5fUO\n1UYmOLFW3vEI8voXAHk4BnNad6QGACCfENmCVZW3RBovr5wSdc22XXDTwp1gzJN3\nqlDcgQ6JfvE8i2JyL44Fb8KiZVvDgongXj9RGwIDAQABAoIBAB4Tjm7WCmbntrt3\n413miZt2OMicVCDtTlxb16HkQ5GBYddlum8urtduYxL8eK1JOIFauexESve+iWh2\nLLwkbgndnjYdKg0WdyTydGjyNF51sxGOufC+EjvbXDIsp9ujfVQZ9gA+f3+Lg1NE\nll9rhcMojR2A7nTQTab6/T1bmZhqBKcsX0DEFiv2o64/QeXSijzXMTLH1jASJKC7\ns+xyu3AmwE3LrecQah8xe+zZSefFWcPCQHNRWflVGUnKWFk58qbdv2X/MSzLvkYu\nU2A0RJX/U4ZOIWM1J8RUPv4MKFEgJ7LA1OT3UtOC+S6Bemlx6h/VWhoJnNhcwvm9\nd5vJoDECgYEA2cjmN0U/eeGlFZDLGRtQ4HVoUkQFMosHk1KQhEj3NZzIZnI9/VFf\njBkfFlP0bFajKZgCwwctb6EcJaRY6JsnKUuTHT5ZikVddFVU1hJkU/GwwHOX9cCM\nFuJi+yxc1G27pE82xWaUuiVRJ8wbQOkPMWrrvaR8eyUa6X8CRk3+JBkCgYEA1v6I\nhRtrxtiZ32hVr33X08vg2VDazgXAdOrBRimxkjjBPlHWekDZePkxKT+fTIzlLffQ\nIemn/gFJo4+YhuBzmv+k5I6Bo6I1M/VSoAFXKShwghg7KSfAQ5BH8oIr9PG4XEl4\nWs5cGb1NrCgqmQISLS1Cn5q6H+NDvdpgckryJVMCgYAQyBRFSga8I5EO+ltMEfjH\ncwSY4jjsTh5FUeVk7CJwdSZUDpWMQYr1RrJIjCuXdY2ZFOeRk6oCog2DMQjQ07PO\n0M4DQNyxdOrgnfqtjDlC5qrSCZY6D5473TH3XNHCZLpCzP/Rcjgfp+R7BpVLCSps\nimqj8FrPOmq6d1j7heMBcQKBgE+ltj/Rm8jrv32DcpL0BPwCwMbhbF38xYLK4VUz\n5wProLOMr+9UjPyDHNJSLpq2a8Tu1J1rqX+xTG2aqf/1sP5QDO9bV+2eDyWzkauT\nM44c3Cll/qzNfC3Lisvtq4kv74PI+Bxz7Kzgc6D+tGFA4ij4ZoEoWiGsGRGBkE9n\nMnPfAoGBAK9q6auE3HXkZ+VVD5LH2td7oze+7o1vrs2O/175oTzf/drcY5S59lK4\nudOjDIXNA/Lot080YONX7lbe2Eept21YektS9xpZ1Qld8NGoPFYsrYjqGYbojFbN\nYJMSEpOpbber+Mca7NenEusL5hK87sQCOP6OJ2RwjkGUVlraVpgQ\n-----END RSA PRIVATE KEY-----"
- 
- node-defaults netplan template "    network:\n        version: 2\n        ethernets:\n            ens160:\n                dhcp4: false\n                addresses:\n                - {{K8S_SSH_IP}}/24\n                routes:\n                - to: 0.0.0.0/0\n                  via: 192.168.107.129\n                nameservers:\n                    addresses:\n                    - 64.104.128.236\n                    - 64.102.6.247\n                    search:\n                    - cisco.com\n\n\n"
- 
- node-defaults os ntp enabled
- node-defaults os ntp servers <mark>clock.cisco.com</mark>
-exit
-</code>
-</pre>
-</div>
+  <div class="highlighter-rouge">
+  <pre class="highlight">
+  <code>
+  clusters cnbng
+   environment manual
+   addons ingress bind-ip-address 192.168.107.166
+   addons ingress enabled
+   addons istio enabled
+   configuration master-virtual-ip 192.168.107.166
+   configuration master-virtual-ip-interface ens160
+   configuration pod-subnet    192.202.0.0/16
+   configuration allow-insecure-registry true
+   node-defaults initial-boot default-user cisco
+   node-defaults initial-boot default-user-ssh-public-key <mark>"ssh public key from step-2"</mark>
+   node-defaults k8s ssh-username cloud-user
+   node-defaults k8s ssh-connection-private-key "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAtuZ56pW6nMf0e8ZMAjsKnj89YIpEfVyZ31GkrqObUua70egN\nOqDdWF8ToUHQrPnwDP/E4BplhtdiP2n/Dq8e9Xf8GRHX6KNXC6dhl5c6MKaBoh5A\nRDj8aVEfRfoDwpp5L0clg01EP0IIqkTIrSqScAheNfiKSptE5OleDS4I4mxfZsDR\nKnhAOtjgU/aHNGFDt1rYJ+QifAcp97ouyiNfsUsJwifLwBN3/EisbTH3rD0Z5fUO\n1UYmOLFW3vEI8voXAHk4BnNad6QGACCfENmCVZW3RBovr5wSdc22XXDTwp1gzJN3\nqlDcgQ6JfvE8i2JyL44Fb8KiZVvDgongXj9RGwIDAQABAoIBAB4Tjm7WCmbntrt3\n413miZt2OMicVCDtTlxb16HkQ5GBYddlum8urtduYxL8eK1JOIFauexESve+iWh2\nLLwkbgndnjYdKg0WdyTydGjyNF51sxGOufC+EjvbXDIsp9ujfVQZ9gA+f3+Lg1NE\nll9rhcMojR2A7nTQTab6/T1bmZhqBKcsX0DEFiv2o64/QeXSijzXMTLH1jASJKC7\ns+xyu3AmwE3LrecQah8xe+zZSefFWcPCQHNRWflVGUnKWFk58qbdv2X/MSzLvkYu\nU2A0RJX/U4ZOIWM1J8RUPv4MKFEgJ7LA1OT3UtOC+S6Bemlx6h/VWhoJnNhcwvm9\nd5vJoDECgYEA2cjmN0U/eeGlFZDLGRtQ4HVoUkQFMosHk1KQhEj3NZzIZnI9/VFf\njBkfFlP0bFajKZgCwwctb6EcJaRY6JsnKUuTHT5ZikVddFVU1hJkU/GwwHOX9cCM\nFuJi+yxc1G27pE82xWaUuiVRJ8wbQOkPMWrrvaR8eyUa6X8CRk3+JBkCgYEA1v6I\nhRtrxtiZ32hVr33X08vg2VDazgXAdOrBRimxkjjBPlHWekDZePkxKT+fTIzlLffQ\nIemn/gFJo4+YhuBzmv+k5I6Bo6I1M/VSoAFXKShwghg7KSfAQ5BH8oIr9PG4XEl4\nWs5cGb1NrCgqmQISLS1Cn5q6H+NDvdpgckryJVMCgYAQyBRFSga8I5EO+ltMEfjH\ncwSY4jjsTh5FUeVk7CJwdSZUDpWMQYr1RrJIjCuXdY2ZFOeRk6oCog2DMQjQ07PO\n0M4DQNyxdOrgnfqtjDlC5qrSCZY6D5473TH3XNHCZLpCzP/Rcjgfp+R7BpVLCSps\nimqj8FrPOmq6d1j7heMBcQKBgE+ltj/Rm8jrv32DcpL0BPwCwMbhbF38xYLK4VUz\n5wProLOMr+9UjPyDHNJSLpq2a8Tu1J1rqX+xTG2aqf/1sP5QDO9bV+2eDyWzkauT\nM44c3Cll/qzNfC3Lisvtq4kv74PI+Bxz7Kzgc6D+tGFA4ij4ZoEoWiGsGRGBkE9n\nMnPfAoGBAK9q6auE3HXkZ+VVD5LH2td7oze+7o1vrs2O/175oTzf/drcY5S59lK4\nudOjDIXNA/Lot080YONX7lbe2Eept21YektS9xpZ1Qld8NGoPFYsrYjqGYbojFbN\nYJMSEpOpbber+Mca7NenEusL5hK87sQCOP6OJ2RwjkGUVlraVpgQ\n-----END RSA PRIVATE KEY-----"
+
+   node-defaults netplan template "    network:\n        version: 2\n        ethernets:\n            ens160:\n                dhcp4: false\n                addresses:\n                - {{K8S_SSH_IP}}/24\n                routes:\n                - to: 0.0.0.0/0\n                  via: 192.168.107.129\n                nameservers:\n                    addresses:\n                    - 64.104.128.236\n                    - 64.102.6.247\n                    search:\n                    - cisco.com\n\n\n"
+
+   node-defaults os ntp enabled
+   node-defaults os ntp servers <mark>clock.cisco.com</mark>
+  exit
+  </code>
+  </pre>
+  </div>
 
 In the above config, change ntp server to the one available in the lab. Also netplan should be as per the netplan configured in the VM. 
 {: .notice--info}
   
 1. Create AIO Node config:
-<div class="highlighter-rouge">
-<pre class="highlight">
-<code>
-clusters cnbng
- nodes cp
-  k8s node-type master
-  k8s ssh-ip 192.168.107.166
-  k8s node-labels disktype ssd
+  <div class="highlighter-rouge">
+  <pre class="highlight">
+  <code>
+  clusters cnbng
+   nodes cp
+    k8s node-type master
+    k8s ssh-ip 192.168.107.166
+    k8s node-labels disktype ssd
+    exit
+    k8s node-labels smi.cisco.com/node-type oam
+    exit
+    initial-boot default-user cloud-user
+    initial-boot default-user-password <mark>your-password</mark>
+   exit
   exit
-  k8s node-labels smi.cisco.com/node-type oam
-  exit
-  initial-boot default-user cloud-user
-  initial-boot default-user-password <mark>your-password</mark>
- exit
-exit
-</code>
-</pre>
-</div>
+  </code>
+  </pre>
+  </div>
   
 1. cnBNG software is available as a tarball and it can be hosted on local http server for offline deployment. In this step we configure the software repository locations for tarball. We setup software cnf for both cnBNG CP and CEE. URL and SHA256 depends on the version of the image and the url location, so these two could change for your deployment
-```
-software cnf bng
- url             http://192.168.107.148/images/CP/cp_30sep21/bng/bng.2021.04.m0.i74.tar
- allow-dev-image true
- sha256          e36b5ff86f35508539a8c8c8614ea227e67f97cf94830a8cee44fe0d2234dc1c
- description     bng-products
-exit
-software cnf cee
- url         http://192.168.107.148/images/CP/cp_30sep21/cee-2020.02.6.i04.tar
- sha256      b5040e9ad711ef743168bf382317a89e47138163765642c432eb5b80d7881f57
- description cee-products
-exit
-```
+  ```
+  software cnf bng
+   url             http://192.168.107.148/images/CP/cp_30sep21/bng/bng.2021.04.m0.i74.tar
+   allow-dev-image true
+   sha256          e36b5ff86f35508539a8c8c8614ea227e67f97cf94830a8cee44fe0d2234dc1c
+   description     bng-products
+  exit
+  software cnf cee
+   url         http://192.168.107.148/images/CP/cp_30sep21/cee-2020.02.6.i04.tar
+   sha256      b5040e9ad711ef743168bf382317a89e47138163765642c432eb5b80d7881f57
+   description cee-products
+  exit
+  ```
 1. Setup Ops Center configs inside cluster for cnBNG
-<div class="highlighter-rouge">
-<pre class="highlight">
-<code>
-clusters <mark>your-cnbng-cp-cluster-name</mark>
- ops-centers bng bng
-  repository-local        bng
-  sync-default-repository true
-  netconf-ip              <mark>your-cnbng-cp-vm-ip</mark>
-  netconf-port            3022
-  ssh-ip                  <mark>your-cnbng-cp-vm-ip</mark>
-  ssh-port                2024
-  ingress-hostname        <mark>your-cnbng-cp-vm-ip</mark>.nip.io
-  initial-boot-parameters use-volume-claims true
-  initial-boot-parameters first-boot-password <mark>your-password1</mark>
-  initial-boot-parameters auto-deploy false
-  initial-boot-parameters single-node true
- exit
- ops-centers cee global
-  repository-local        cee
-  sync-default-repository true
-  netconf-ip              <mark>your-cnbng-cp-vm-ip</mark>
-  netconf-port            3024
-  ssh-ip                  <mark>your-cnbng-cp-vm-ip</mark>
-  ssh-port                2023
-  ingress-hostname        <mark>your-cnbng-cp-vm-ip</mark>.nip.io
-  initial-boot-parameters use-volume-claims true
-  initial-boot-parameters first-boot-password <mark>your-password1</mark>
-  initial-boot-parameters auto-deploy true
-  initial-boot-parameters single-node true
- exit
-exit
-</code>
-</pre>
-</div>
+  <div class="highlighter-rouge">
+  <pre class="highlight">
+  <code>
+  clusters <mark>your-cnbng-cp-cluster-name</mark>
+   ops-centers bng bng
+    repository-local        bng
+    sync-default-repository true
+    netconf-ip              <mark>your-cnbng-cp-vm-ip</mark>
+    netconf-port            3022
+    ssh-ip                  <mark>your-cnbng-cp-vm-ip</mark>
+    ssh-port                2024
+    ingress-hostname        <mark>your-cnbng-cp-vm-ip</mark>.nip.io
+    initial-boot-parameters use-volume-claims true
+    initial-boot-parameters first-boot-password <mark>your-password1</mark>
+    initial-boot-parameters auto-deploy false
+    initial-boot-parameters single-node true
+   exit
+   ops-centers cee global
+    repository-local        cee
+    sync-default-repository true
+    netconf-ip              <mark>your-cnbng-cp-vm-ip</mark>
+    netconf-port            3024
+    ssh-ip                  <mark>your-cnbng-cp-vm-ip</mark>
+    ssh-port                2023
+    ingress-hostname        <mark>your-cnbng-cp-vm-ip</mark>.nip.io
+    initial-boot-parameters use-volume-claims true
+    initial-boot-parameters first-boot-password <mark>your-password1</mark>
+    initial-boot-parameters auto-deploy true
+    initial-boot-parameters single-node true
+   exit
+  exit
+  </code>
+  </pre>
+  </div>
   
 1. Deploy cnBNG CP cluster using cluster sync command:
-```
-clusters cnbng-cp-lab1 actions sync run debug true 
-```	
+  ```
+  clusters cnbng-cp-lab1 actions sync run debug true 
+  ```	
 Monitor sync using monitor command:
-```
-monitor sync-logs cnbng-cp-lab1
-```
+  ```
+  monitor sync-logs cnbng-cp-lab1
+  ```
+  
 ## Verifications
 
 - Check kubernetes cluster is deployed correctly and no PODs are crashing
