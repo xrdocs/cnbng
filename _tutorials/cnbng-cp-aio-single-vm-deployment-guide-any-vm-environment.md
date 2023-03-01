@@ -72,6 +72,7 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
 	            dhcp4: true
 	    version: 2
 ```
+
 **Note**: Sometimes interface is not shown as ens160, in that case it is a good idea to search for the interface using ifconfig -a command. Generally lower ens number is the first NIC attached to the VM, and higher number is the last.
 {: .notice--info}
 
