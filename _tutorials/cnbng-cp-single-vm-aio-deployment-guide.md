@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2021-12-06 18:19 +0530'
-title: cnBNG CP Single VM (AIO) Deployment Guide
+title: cnBNG CP Single VM (AIO) Deployment Guide - VMWare
 author: Gurpreet Dhaliwal
 position: top
 tags:
