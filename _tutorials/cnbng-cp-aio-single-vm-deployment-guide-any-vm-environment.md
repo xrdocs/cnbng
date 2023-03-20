@@ -6,6 +6,9 @@ position: top
 tags:
   - cnbng
   - cse
+excerpt: >-
+  Learn how to deploy cnBNG Control Plane in a pre-deployed VM in any
+  environment
 ---
 {% include toc %}
 
