@@ -44,7 +44,7 @@ SMI Ubuntu VM can be deployed using any standard VM deployment procedure in a gi
 1. Select the datastore 
 1. Select compatibility (ESXi 6.7 or later)
 1. Select guest OS: Guest Family- Linux, Guest OS Version- Ubuntu Linux (64-bit)
-1. Customize Hardware:
+1. Customize Hardware (sizing and networking may vary on deployments):
 	1. vCPU: 8, Memory: 16GB, New Hard disk: 100Gb
 	1. Under Network: select management network ("VM Network" in most cases
 	1. Click New CD/DVD Drive and do the following:
@@ -552,5 +552,3 @@ smart-agent-bng-bng-ops-center-54bcbf5576-tc4p9        1/1     Running    1     
 udp-proxy-0                                            1/1     Running    0          2m45s
 zookeeper-0                                            1/1     Running    0          2m46s
 </code>
-
-
