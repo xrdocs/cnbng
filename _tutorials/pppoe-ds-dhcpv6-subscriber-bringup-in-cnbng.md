@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2022-02-14 18:03 +0530'
+date: '2022-05-14 18:03 +0530'
 title: PPPoE DS (DHCPv6) Subscriber Bringup in cnBNG
 author: Gurpreet Dhaliwal
 excerpt: >-
