@@ -418,8 +418,8 @@ cisco-lac Cleartext-Password:="cisco"
     Service-Type=Outbound-User,
     Tunnel-Type=L2TP,
     Tunnel-Medium-Type=:1:IP,
-    Tunnel-Client-Endpoint=":1:172.0.0.2",
-    Tunnel-Server-Endpoint=":1:200.200.210.1"
+    Tunnel-Client-Endpoint=":1:<your-user-plane-loopback0-ip>",
+    Tunnel-Server-Endpoint=":1:<LNS IP>"
 ```
 
 ## Verifications
