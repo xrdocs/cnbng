@@ -295,6 +295,7 @@ cnbng-nal location 0/RSP0/CPU0
   interface Loopback1
    <mark>!!! Any dummy IP</mark>
    primary-address <mark>1.1.1.1</mark>
+   ipv6-enable
   !
  !
  cp-association retry-count 5
@@ -313,7 +314,6 @@ Loopback1 is used for ASR9k internal use for cnBNG.
 
 ```
 interface Loopback1
- ipv6 enable
 ```
 
 ### DHCP Configuration
